@@ -17,24 +17,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.scratch.R
 
 
+val GoogleFont = FontFamily(
+    Font(R.font.googlesans_regular, FontWeight.Bold)
+)
+
 @Composable
 fun drawerHeader() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 64.dp),
+            .padding(top = 64.dp, bottom = 20.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(text = "Blocks",
             fontSize = 60.sp,
-            color = Color.White
+            color = Color.White,
+            fontFamily = GoogleFont
         )
     }
 }
@@ -56,7 +63,7 @@ fun drawerBody(
                         onItemClick(item)
                     }
                     .background(
-                        color = (Color(android.graphics.Color.parseColor(items[0].boxColor))),
+                        color = (Color(android.graphics.Color.parseColor(item.boxColor))),
                         shape = RoundedCornerShape(8.dp)
                     )
                     .width(250.dp)

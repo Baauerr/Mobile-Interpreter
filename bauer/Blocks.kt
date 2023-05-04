@@ -7,6 +7,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.GenericShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.icons.Icons
@@ -14,12 +15,15 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import com.example.scratch.ui.theme.TextFieldWithMapValue
 import kotlinx.coroutines.IO_PARALLELISM_PROPERTY_NAME
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -27,7 +31,7 @@ import kotlin.math.roundToInt
 @Preview(showBackground = true)
 @Composable
 fun mainDisplay() {
-    Column(
+    Box(
         modifier = Modifier
             .background(Color(android.graphics.Color.parseColor("#0E1621")))
             .fillMaxSize()
@@ -36,16 +40,12 @@ fun mainDisplay() {
     }
 }
 
-fun blockPlus() {
-    var OPS = ""
-}
-
-
 @Composable
 fun navigationPanel() {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
-    Scaffold(
+    Scaffold(modifier = Modifier
+        .zIndex(1f),
         scaffoldState = scaffoldState,
         topBar = {
             AppBar(
@@ -84,39 +84,11 @@ fun navigationPanel() {
                             boxColor = "#FF7F50"
                         ),
                         blocks(
-                            id = "setVariable",
-                            title = "Set variable",
-                            contentDescription = "SettingVariable",
+                            id = "sumOperation",
+                            title = "Sum operation",
+                            contentDescription = "sumBlocks",
                             icon = Icons.Default.AddCircle,
-                            boxColor = "#FF7F00"
-                        ),
-                        blocks(
-                            id = "changeVariable",
-                            title = "Change variable",
-                            contentDescription = "ChangingVariable",
-                            icon = Icons.Default.AddCircle,
-                            boxColor = "#FF7F50"
-                        ),
-                        blocks(
-                            id = "changeVariable",
-                            title = "Change variable",
-                            contentDescription = "ChangingVariable",
-                            icon = Icons.Default.AddCircle,
-                            boxColor = "#FF7F50"
-                        ),
-                        blocks(
-                            id = "changeVariable",
-                            title = "Change variable",
-                            contentDescription = "ChangingVariable",
-                            icon = Icons.Default.AddCircle,
-                            boxColor = "#FF7F50"
-                        ),
-                        blocks(
-                            id = "changeVariable",
-                            title = "Change variable",
-                            contentDescription = "ChangingVariable",
-                            icon = Icons.Default.AddCircle,
-                            boxColor = "#FF7F50"
+                            boxColor = "#FF4C64"
                         ),
                     ),
                     onItemClick = {
@@ -125,13 +97,22 @@ fun navigationPanel() {
                 )
         },
         contentColor = (Color(android.graphics.Color.parseColor("#FFFFFF"))),
-        drawerBackgroundColor = (Color(android.graphics.Color.parseColor("#17212B"))),
+        drawerBackgroundColor = (Color.Transparent),
         backgroundColor = (Color(android.graphics.Color.parseColor("#17212B"))),
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
         ) {
+            Column(modifier = Modifier
+                .background(
+                    color = (Color(android.graphics.Color.parseColor("#FF7F50"))),
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .fillMaxWidth()
+                .shadow(2.dp))
+            {
+                TextFieldWithMapValue() }
         }
     }
 }
