@@ -1,34 +1,22 @@
-import android.annotation.SuppressLint
-import android.view.MenuItem
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.GenericShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.example.scratch.drawerBody
-import com.example.scratch.drawerHeader
-import kotlinx.coroutines.IO_PARALLELISM_PROPERTY_NAME
-import kotlin.math.roundToInt
+import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
 @Composable
 fun mainDisplay() {
-    Column(
+    Box(
         modifier = Modifier
             .background(Color(android.graphics.Color.parseColor("#0E1621")))
             .fillMaxSize()
@@ -36,116 +24,135 @@ fun mainDisplay() {
         navigationPanel()
     }
 }
-fun blockPlus(){
-    var OPS = ""
-}
 
-
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun navigationPanel(){
+fun navigationPanel() {
+    val viewBlocks =  remember {mutableStateListOf <@Composable () -> Unit>()}
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
+    val drawerState = scaffoldState.drawerState
     Scaffold(
+        scaffoldState = scaffoldState,
         topBar = {
-            AppBar {
+            AppBar(
                 onNavigationIconClick = {
-
+                    scope.launch {
+                        scaffoldState.drawerState.open()
+                    }
                 }
-            }
-          },
+            )
+        },
         bottomBar = {
-            BottomNavigation (
+            BottomNavigation(
                 backgroundColor = (Color(android.graphics.Color.parseColor("#0E1621"))),
-                    ) {
+            ) {
                 BottomNavigationItem(
-                    icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "Home") },
-                    selected = true,
-                    onClick = { /* Handle home click */ }
+                    icon = { Icon(Icons.Filled.Menu, contentDescription = "OpenMenu") },
+                    selected = false,
+                    onClick = {
+                        scope.launch {
+                            scaffoldState.drawerState.open()
+                        }
+                    }
                 )
                 BottomNavigationItem(
-                    icon = { Icon(Icons.Filled.Close, contentDescription = "Settings") },
+                    icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "Play") },
+                    selected = true,
+                    onClick = {}
+                )
+                BottomNavigationItem(
+                    icon = { Icon(Icons.Filled.Close, contentDescription = "Stop") },
                     selected = false,
                     onClick = { /* Handle settings click */ }
                 )
             }
         },
         drawerContent = {
-                        drawerHeader()
+            drawerHeader()
             drawerBody(
                 items = listOf(
-                    MenuItem(
-                        id = "home",
-                        title = "Home",
-                        contentDescription = "Go to home screen",
-                        icon = Icons.Default.Home
-                    )
+                    blocks(
+                        id = "createVariable",
+                        title = "Create new variable",
+                        contentDescription = "CreatingVariable",
+                        icon = Icons.Default.AddCircle,
+                        boxColor = "#FF7F50"
+                    ),
+                    blocks(
+                        id = "sumOperation",
+                        title = "Sum operation",
+                        contentDescription = "sumBlocks",
+                        icon = Icons.Default.AddCircle,
+                        boxColor = "#FF4C64"
+                    ),
                 ),
+                onItemClick = {
+                    viewBlocks.add{textFieldWithMapValue()}
+                }
             )
         },
-
-        drawerBackgroundColor = (Color(android.graphics.Color.parseColor("#17212B"))),
+        contentColor = (Color(android.graphics.Color.parseColor("#FFFFFF"))),
+        drawerBackgroundColor = (Color.Transparent),
         backgroundColor = (Color(android.graphics.Color.parseColor("#17212B"))),
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
         ) {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+            )
+            {
+                for (visual in viewBlocks) {
+                    val state = rememberDismissState(
+                        confirmStateChange = {
+                            if (it == DismissValue.DismissedToStart) {
+                                viewBlocks.removeFirst()
+                            }
+                            true
+                        }
+                    )
+                    SwipeToDismiss(
+                        state = state, background = {
+                            val color = when (state.dismissDirection) {
+                                DismissDirection.StartToEnd -> Color.Transparent
+                                DismissDirection.EndToStart -> Color(android.graphics.Color.parseColor("#FF3200"))
+                                null -> Color.Transparent
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(color = color, shape = RoundedCornerShape(8.dp))
+                                    .padding(10.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Delete",
+                                    tint = Color.White,
+                                    modifier = Modifier.align(Alignment.CenterEnd)
+                                )
+                            }
+                        },
+                        dismissContent = {
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        color = (Color(android.graphics.Color.parseColor("#FF7F50"))),
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
+                                    .fillMaxWidth()
+                                    .shadow(2.dp)
+                            )
+                            {
+                                visual()
+                            }
+                        },
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
         }
     }
 }
-
-//drawerContent = {
-//
-//    Column(modifier = Modifier
-//        .fillMaxHeight(),
-//        verticalArrangement = Arrangement.Center,
-//        horizontalAlignment = Alignment.CenterHorizontally) {}
-//},
-//
-//drawerBackgroundColor = (Color(android.graphics.Color.parseColor("#17212B"))),
-//backgroundColor = (Color(android.graphics.Color.parseColor("#17212B"))),
-//) { innerPadding ->
-//    Column(
-//        modifier = Modifier
-//            .padding(innerPadding)
-//    ) {
-//    }
-//}
-
-
-@Composable
-
-fun borderMenu(modifier: Modifier
-
-){
-
-}
-
-
-
-
-//fun ScreenWithButton() {
-//    val boxes = remember { mutableStateListOf<Color>() }
-//
-//    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
-//        Button(
-//            onClick = { boxes.add(Color.Red) },
-//            modifier = Modifier
-//                .align(Alignment.CenterHorizontally)
-//                .background(Color(android.graphics.Color.parseColor("#FFFFFF")))
-//        ) {
-//            Text("Добавить Box")
-//        }
-//
-//        boxes.forEach {
-//            Box(
-//                modifier = Modifier
-//                    .width(200.dp)
-//                    .height(200.dp)
-//                    .background(Color(android.graphics.Color.parseColor("#FFFFFF")))
-//            ) {
-//                // Содержимое вашего Box
-//            }
-//        }
-//    }
-//}
-
-//При нажатии на кнопку, элемент будет добавляться в массив, а уже этот массив через цикл отображаться на экране. Элементы можно сделать в виде классов.

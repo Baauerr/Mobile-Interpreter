@@ -1,17 +1,12 @@
-package com.example.scratch.ui.theme
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 
 val numbersMap = mutableStateMapOf("textFieldValue" to "")
 
@@ -37,12 +32,12 @@ fun textFieldWithMapValue() {
                     .padding(top = 4.dp)
                     .weight(1f),
                 maxLines = 1,
-                textStyle = TextStyle(color = androidx.compose.ui.graphics.Color.White),
+                textStyle = TextStyle(color = Color.White),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color(0xFF333333)
                 )
             )
-            Text(text = " = ", color = androidx.compose.ui.graphics.Color.White)
+            Text(text = " = ", color = Color.White)
             TextField(
                 value = valueTextFieldValue,
                 onValueChange = { newValue ->
@@ -54,7 +49,7 @@ fun textFieldWithMapValue() {
                     .padding(top = 4.dp)
                     .weight(2f),
                 maxLines = 1,
-                textStyle = TextStyle(color = androidx.compose.ui.graphics.Color.White),
+                textStyle = TextStyle(color = Color.White),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color(0xFF444444)
                 )
@@ -77,11 +72,11 @@ fun textFieldWithMapValue() {
                 .padding(top = 8.dp)
                 .fillMaxWidth()
         ) {
-            Text("Assignment", color = androidx.compose.ui.graphics.Color.White)
+            Text("Assignment", color = Color.White)
         }
         Text(
             text = "$savedKey = ${numbersMap[savedKey] ?: ""}",
-            color = androidx.compose.ui.graphics.Color.White
+            color = Color.White
         )
     }
 }
