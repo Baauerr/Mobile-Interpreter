@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 val numbersMap = mutableStateMapOf("textFieldValue" to "")
 
 @Composable
-fun TextFieldWithMapValue() {
+fun TextFieldWithMapVal() {
     var keyTextFieldValue by remember { mutableStateOf("") }
     var valueTextFieldValue by remember { mutableStateOf("") }
     var savedKey by remember { mutableStateOf("") }
