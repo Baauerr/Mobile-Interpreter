@@ -1,5 +1,8 @@
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -9,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -25,10 +29,16 @@ fun mainDisplay() {
     }
 }
 
+data class Blockes(
+    val blockID: Int,
+    val blockFunction: @Composable () -> Unit
+)
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun navigationPanel() {
-    val viewBlocks =  remember {mutableStateListOf <@Composable () -> Unit>()}
+    var iDOfBlock = 0
+    val viewBlocks = remember { mutableStateListOf<Blockes>() }
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val drawerState = scaffoldState.drawerState
@@ -88,7 +98,12 @@ fun navigationPanel() {
                     ),
                 ),
                 onItemClick = {
-                    viewBlocks.add{textFieldWithMapValue()}
+                    viewBlocks.add(
+                        Blockes(
+                            blockID = iDOfBlock++,
+                            blockFunction = { textFieldWithMapValue() }
+                        )
+                    )
                 }
             )
         },
@@ -100,55 +115,56 @@ fun navigationPanel() {
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-            Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-            )
-            {
-                for (visual in viewBlocks) {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                itemsIndexed(
+                    items = viewBlocks,
+                    key = { index, item ->
+                        item.hashCode()
+                    }) { index, item ->
                     val state = rememberDismissState(
                         confirmStateChange = {
                             if (it == DismissValue.DismissedToStart) {
-                                viewBlocks.removeFirst()
+                                viewBlocks.remove(item)
                             }
                             true
                         }
                     )
                     SwipeToDismiss(
-                        state = state, background = {
+                        state = state,
+                        background = {
                             val color = when (state.dismissDirection) {
                                 DismissDirection.StartToEnd -> Color.Transparent
-                                DismissDirection.EndToStart -> Color(android.graphics.Color.parseColor("#FF3200"))
+                                DismissDirection.EndToStart -> Color.Red
                                 null -> Color.Transparent
                             }
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .background(color = color, shape = RoundedCornerShape(8.dp))
-                                    .padding(10.dp)
+                                    .background(color, shape = RoundedCornerShape(8.dp))
+                                    .padding(8.dp)
+
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Delete,
-                                    contentDescription = "Delete",
+                                    contentDescription = null,
                                     tint = Color.White,
                                     modifier = Modifier.align(Alignment.CenterEnd)
                                 )
                             }
                         },
                         dismissContent = {
-                            Box(
-                                modifier = Modifier
-                                    .background(
-                                        color = (Color(android.graphics.Color.parseColor("#FF7F50"))),
-                                        shape = RoundedCornerShape(8.dp)
-                                    )
-                                    .fillMaxWidth()
-                                    .shadow(2.dp)
-                            )
-                            {
-                                visual()
+                            Box(modifier = Modifier
+                                .fillMaxWidth()
+                                .shadow(2.dp)
+                                .background(
+                                    color = (Color(android.graphics.Color.parseColor("#FF7F50"))),
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                            ) {
+                                item.blockFunction()
                             }
                         },
+                        directions = setOf(DismissDirection.EndToStart)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
