@@ -1,6 +1,8 @@
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
@@ -31,6 +34,7 @@ fun mainDisplay() {
 
 data class Blockes(
     val blockID: Int,
+    val color: String,
     val blockFunction: @Composable () -> Unit
 )
 
@@ -41,6 +45,7 @@ fun navigationPanel() {
     val viewBlocks = remember { mutableStateListOf<Blockes>() }
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+    val isExpanded = remember { mutableStateOf(false) }
     val drawerState = scaffoldState.drawerState
     Scaffold(
         scaffoldState = scaffoldState,
@@ -55,6 +60,8 @@ fun navigationPanel() {
         },
         bottomBar = {
             BottomNavigation(
+                modifier = Modifier
+                    .height(50.dp),
                 backgroundColor = (Color(android.graphics.Color.parseColor("#0E1621"))),
             ) {
                 BottomNavigationItem(
@@ -72,9 +79,9 @@ fun navigationPanel() {
                     onClick = {}
                 )
                 BottomNavigationItem(
-                    icon = { Icon(Icons.Filled.Close, contentDescription = "Stop") },
+                    icon = { Icon(Icons.Filled.DateRange, contentDescription = "Console") },
                     selected = false,
-                    onClick = { /* Handle settings click */ }
+                    onClick = { isExpanded.value = !isExpanded.value }
                 )
             }
         },
@@ -90,25 +97,37 @@ fun navigationPanel() {
                         boxColor = "#FF7F50"
                     ),
                     blocks(
-                        id = "sumOperation",
-                        title = "Sum operation",
-                        contentDescription = "sumBlocks",
+                        id = "mathOperation",
+                        title = "Math operation",
+                        contentDescription = "mathBlocks",
                         icon = Icons.Default.AddCircle,
                         boxColor = "#FF4C64"
                     ),
                 ),
                 onItemClick = {
-                    viewBlocks.add(
-                        Blockes(
-                            blockID = iDOfBlock++,
-                            blockFunction = { textFieldWithMapValue() }
+                    if (it.id == "createVariable") {
+                        viewBlocks.add(
+                            Blockes(
+                                blockID = iDOfBlock++,
+                                color = "#FF7F50",
+                                blockFunction = { textFieldWithMapValue() }
+                            )
                         )
-                    )
+                    }
+                    else if (it.id == "mathOperation"){
+                        viewBlocks.add(
+                            Blockes(
+                                blockID = iDOfBlock++,
+                                color = "#FF4C64",
+                                blockFunction = { textFieldWithMapValue() }
+                            )
+                        )
+                    }
                 }
             )
         },
         contentColor = (Color(android.graphics.Color.parseColor("#FFFFFF"))),
-        drawerBackgroundColor = (Color.Transparent),
+        drawerBackgroundColor = (Color.Black.copy(alpha = 0.4f)),
         backgroundColor = (Color(android.graphics.Color.parseColor("#17212B"))),
     ) { innerPadding ->
         Column(
@@ -157,7 +176,7 @@ fun navigationPanel() {
                                 .fillMaxWidth()
                                 .shadow(2.dp)
                                 .background(
-                                    color = (Color(android.graphics.Color.parseColor("#FF7F50"))),
+                                    color = (Color(android.graphics.Color.parseColor(item.color))),
                                     shape = RoundedCornerShape(8.dp)
                                 )
                             ) {
@@ -170,5 +189,38 @@ fun navigationPanel() {
                 }
             }
         }
+        if (isExpanded.value) {
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .background(color = Color.Black.copy(alpha = 0.6f))
+                .padding(bottom = 55.dp),
+                Arrangement.Bottom,
+            )
+            {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .padding(16.dp)
+                        .shadow(2.dp)
+                        .background(
+                            Color(android.graphics.Color.parseColor("#0E1621")),
+                            shape = RoundedCornerShape(8.dp)
+                        ),
+
+                    Alignment.Center,
+
+                    ) {
+                    LazyRow()
+                    {
+                        item{
+                            Text(text = "Это блок с текстом", fontSize = 30.sp)
+                        }
+
+                    }
+                }
+            }
+        }
     }
 }
+
