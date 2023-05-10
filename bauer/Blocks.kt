@@ -18,6 +18,7 @@ import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.androidtaskcompose.ui.theme.opsExpression
 import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
@@ -119,7 +120,7 @@ fun navigationPanel() {
                             Blockes(
                                 blockID = iDOfBlock++,
                                 color = "#FF4C64",
-                                blockFunction = { textFieldWithMapValue() }
+                                blockFunction = { opsExpression() }
                             )
                         )
                     }
