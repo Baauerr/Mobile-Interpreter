@@ -19,6 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.androidtaskcompose.ui.theme.opsExpression
+import com.example.scratch.printBlock
+import com.example.scratch.variableForView
 import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
@@ -43,6 +45,7 @@ data class Blockes(
 @Composable
 fun navigationPanel() {
     var iDOfBlock = 0
+    var tempVariableForView = ""
     val viewBlocks = remember { mutableStateListOf<Blockes>() }
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
@@ -77,7 +80,7 @@ fun navigationPanel() {
                 BottomNavigationItem(
                     icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "Play") },
                     selected = true,
-                    onClick = {}
+                    onClick = {tempVariableForView = variableForView}
                 )
                 BottomNavigationItem(
                     icon = { Icon(Icons.Filled.DateRange, contentDescription = "Console") },
@@ -104,6 +107,13 @@ fun navigationPanel() {
                         icon = Icons.Default.AddCircle,
                         boxColor = "#FF4C64"
                     ),
+                    blocks(
+                        id = "createPrint",
+                        title = "Create print block",
+                        contentDescription = "creatingPrint",
+                        icon = Icons.Default.AddCircle,
+                        boxColor = "#EC2EFF"
+                    ),
                 ),
                 onItemClick = {
                     if (it.id == "createVariable") {
@@ -124,6 +134,16 @@ fun navigationPanel() {
                             )
                         )
                     }
+                    else if (it.id == "createPrint"){
+                        viewBlocks.add(
+                            Blockes(
+                                blockID = iDOfBlock++,
+                                color = "#EC2EFF",
+                                blockFunction = { printBlock() }
+                            )
+                        )
+                    }
+
                 }
             )
         },
@@ -215,13 +235,11 @@ fun navigationPanel() {
                     LazyRow()
                     {
                         item{
-                            Text(text = "Это блок с текстом", fontSize = 30.sp)
+                            Text(text = tempVariableForView, fontSize = 30.sp)
                         }
-
                     }
                 }
             }
         }
     }
 }
-

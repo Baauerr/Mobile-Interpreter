@@ -30,12 +30,12 @@ fun opsExpression() {
                 },
                 modifier = Modifier.padding(top = 4.dp)
                     .weight(1f),
-                textStyle = TextStyle(color = androidx.compose.ui.graphics.Color.White),
+                textStyle = TextStyle(color = Color.White),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color(0xFF333333)
                 )
             )
-            Text(text = " = ", color = androidx.compose.ui.graphics.Color.White)
+            Text(text = " = ", color = Color.White)
             TextField(
                 value = valueTextFieldValue,
                 onValueChange = { newValue ->
@@ -44,7 +44,7 @@ fun opsExpression() {
                 modifier = Modifier.padding(top = 4.dp)
                     .weight(2f),
                 maxLines = 1,
-                textStyle = TextStyle(color = androidx.compose.ui.graphics.Color.White),
+                textStyle = TextStyle(color = Color.White),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color(0xFF444444)
                 )
@@ -60,12 +60,12 @@ fun opsExpression() {
             colors = ButtonDefaults.buttonColors(backgroundColor = Color(android.graphics.Color.parseColor("#FF4C64"))),
             modifier = Modifier.padding(top = 8.dp).fillMaxWidth()
         ) {
-            Text("Result", color = androidx.compose.ui.graphics.Color.White)
+            Text("Result", color = Color.White)
         }
 
         Text(
             text = "$savedKey = $result",
-            color = androidx.compose.ui.graphics.Color.White
+            color = Color.White
         )
     }
 }
