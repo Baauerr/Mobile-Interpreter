@@ -1,4 +1,4 @@
-package com.example.androidtaskcompose.ui.theme
+package com.example.scratch.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
