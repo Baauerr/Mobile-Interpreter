@@ -1,4 +1,4 @@
-
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -7,14 +7,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import com.example.androidtaskcompose.ui.theme.GlobalStack
+import java.util.Stack
+
 
 val numbersMap = mutableStateMapOf("textFieldValue" to "")
-
 @Composable
 fun textFieldWithMapValue() {
     var keyTextFieldValue by remember { mutableStateOf("") }
     var valueTextFieldValue by remember { mutableStateOf("") }
     var savedKey by remember { mutableStateOf("") }
+    var currentKey by remember { mutableStateOf("") }
+    var buttonColor by remember {
+        mutableStateOf(Color(android.graphics.Color.parseColor("#FF4C64")))
+    }
 
     Column(
         modifier = Modifier
@@ -58,15 +64,28 @@ fun textFieldWithMapValue() {
 
         Button(
             onClick = {
-                numbersMap[keyTextFieldValue] = valueTextFieldValue
-                savedKey = keyTextFieldValue
+                if (numbersMap.containsKey(keyTextFieldValue)) {
+                    // Если ключ уже есть в словаре, меняем значение
+                    val oldValue = numbersMap[keyTextFieldValue]
+                    numbersMap[keyTextFieldValue] = valueTextFieldValue
+                    currentKey = keyTextFieldValue
+                    if (oldValue != valueTextFieldValue) {
+                        GlobalStack.values.removeLast()
+                        GlobalStack.values.push(numbersMap[currentKey]?.toDouble() ?: "".toDouble())
+                        println(GlobalStack.values)
+                        buttonColor = Color(android.graphics.Color.parseColor("#FF4C64"))
+                    }
+                } else {
+                    // Иначе добавляем новую пару ключ-значение в словарь
+                    numbersMap[keyTextFieldValue] = valueTextFieldValue
+                    currentKey = keyTextFieldValue
+                    GlobalStack.values.push(numbersMap[currentKey]?.toDouble() ?: "".toDouble())
+                    println(GlobalStack.values)
+                    buttonColor = Color.Green
+                }
             },
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color(
-                    android.graphics.Color.parseColor(
-                        "#FF4C64"
-                    )
-                )
+                backgroundColor = buttonColor
             ),
             modifier = Modifier
                 .padding(top = 8.dp)
@@ -74,9 +93,5 @@ fun textFieldWithMapValue() {
         ) {
             Text("Assignment", color = Color.White)
         }
-        Text(
-            text = "$savedKey = ${numbersMap[savedKey] ?: ""}",
-            color = Color.White
-        )
     }
 }

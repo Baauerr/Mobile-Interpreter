@@ -12,12 +12,21 @@ import numbersMap
 import java.util.*
 import java.util.Stack
 
+val stackTemp = Stack<Double>()
+
+object GlobalStack {
+    val values = Stack<Double>()
+}
+
 @Composable
 fun opsExpression() {
     var keyTextFieldValue by remember { mutableStateOf("") }
     var valueTextFieldValue by remember { mutableStateOf("") }
     var savedKey by remember { mutableStateOf("") }
     var result by remember { mutableStateOf(0.0) }
+    var buttonColor by remember {
+        mutableStateOf(Color(android.graphics.Color.parseColor("#FF4C64")))
+    }
 
     Column(modifier = Modifier.padding(16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -30,21 +39,21 @@ fun opsExpression() {
                 },
                 modifier = Modifier.padding(top = 4.dp)
                     .weight(1f),
-                textStyle = TextStyle(color = Color.White),
+                textStyle = TextStyle(color = androidx.compose.ui.graphics.Color.White),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color(0xFF333333)
                 )
             )
-            Text(text = " = ", color = Color.White)
+            Text(text = " = ", color = androidx.compose.ui.graphics.Color.White)
             TextField(
                 value = valueTextFieldValue,
                 onValueChange = { newValue ->
-                        valueTextFieldValue = newValue
+                    valueTextFieldValue = newValue
                 },
                 modifier = Modifier.padding(top = 4.dp)
                     .weight(2f),
                 maxLines = 1,
-                textStyle = TextStyle(color = Color.White),
+                textStyle = TextStyle(color = androidx.compose.ui.graphics.Color.White),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color(0xFF444444)
                 )
@@ -53,25 +62,40 @@ fun opsExpression() {
 
         Button(
             onClick = {
-                numbersMap[keyTextFieldValue] = valueTextFieldValue
-                savedKey = keyTextFieldValue
-                result = ops(valueTextFieldValue)
+                if (valueTextFieldValue.isNotBlank()) {
+                    numbersMap[keyTextFieldValue] = valueTextFieldValue
+                    savedKey = keyTextFieldValue
+                    stackTemp.addAll(GlobalStack.values.toList())
+                    result = ops(valueTextFieldValue)
+                    GlobalStack.values.clear()
+                    GlobalStack.values.addAll(stackTemp.toList())
+                    stackTemp.clear()
+                    println(GlobalStack.values)
+                    println(stackTemp)
+                    buttonColor = Color.Green
+                }
+                else{
+                    result = 0.0
+                    stackTemp.clear()
+                    buttonColor = Color(android.graphics.Color.parseColor("#FF4C64"))
+                }
             },
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color(android.graphics.Color.parseColor("#FF4C64"))),
+            colors = ButtonDefaults.buttonColors(backgroundColor = buttonColor),
             modifier = Modifier.padding(top = 8.dp).fillMaxWidth()
         ) {
-            Text("Result", color = Color.White)
+            Text("Result", color = androidx.compose.ui.graphics.Color.White)
         }
 
         Text(
             text = "$savedKey = $result",
-            color = Color.White
+            color = androidx.compose.ui.graphics.Color.White
         )
     }
 }
 fun ops(expression: String): Double {
     val operators = Stack<Char>()
     val outputQueue = LinkedList<String>()
+    val savedValues = Stack<Double>()
 
     // Проходим по выражению и формируем очередь выхода
     var i = 0
@@ -99,7 +123,7 @@ fun ops(expression: String): Double {
                     throw IllegalArgumentException("Неправильное использование скобок")
                 }
             }
-            '+', '-', '*', '/' -> {
+            '+', '-', '*', '/', '%' -> {
                 while (operators.isNotEmpty() && getPrecedence(c) <= getPrecedence(operators.peek())) {
                     outputQueue.add(operators.pop().toString())
                 }
@@ -118,34 +142,35 @@ fun ops(expression: String): Double {
     }
 
     // Вычисляем значение выражения из очереди выхода
-    val values = Stack<Double>()
     for (token in outputQueue) {
         when {
-            token.matches("-?\\d+(\\.\\d+)?".toRegex()) -> {
-                values.push(token.toDouble())
+            token.matches("[-+]?\\w+([.]?\\w+)?".toRegex()) -> {
+                GlobalStack.values.push(token.toDouble())
             }
             else -> {
-                val b = values.pop()
-                val a = if (values.isNotEmpty()) values.pop() else 0.0
+                val b = GlobalStack.values.pop()
+                val a = if (GlobalStack.values.isNotEmpty()) GlobalStack.values.pop() else 0.0
                 val result = when (token) {
                     "+" -> a + b
                     "-" -> a - b
                     "*" -> a * b
                     "/" -> a / b
+                    "%" -> a % b
                     else -> throw IllegalArgumentException("Неподдерживаемый оператор: $token")
                 }
-                values.push(result)
+                GlobalStack.values.push(result)
             }
         }
     }
 
-    // Возвращаем результат
-    return if (values.isNotEmpty()) values.pop() else 0.0
+// Возвращаем результат вычисления
+    return GlobalStack.values.pop()
 }
+
 fun getPrecedence(c: Char): Int {
     return when (c) {
         '+', '-' -> 1
-        '*', '/' -> 2
+        '*', '/' , '%' -> 2
         else -> 0
     }
 }
