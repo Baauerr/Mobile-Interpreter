@@ -61,7 +61,6 @@ fun textFieldWithMapValue() {
                 )
             )
         }
-
         Button(
             onClick = {
                 if (numbersMap.containsKey(keyTextFieldValue)) {
@@ -70,16 +69,18 @@ fun textFieldWithMapValue() {
                     numbersMap[keyTextFieldValue] = valueTextFieldValue
                     currentKey = keyTextFieldValue
                     if (oldValue != valueTextFieldValue) {
-                        GlobalStack.values.removeLast()
-                        GlobalStack.values.push(numbersMap[currentKey]?.toDouble() ?: "".toDouble())
+                        val index = GlobalStack.values.indexOfFirst { it == oldValue?.toDoubleOrNull() ?: "".toDouble() }
+                        if (index != -1) {
+                            GlobalStack.values[index] = valueTextFieldValue.toDoubleOrNull() ?: 0.0
+                        }
                         println(GlobalStack.values)
-                        buttonColor = Color(android.graphics.Color.parseColor("#FF4C64"))
                     }
+                    buttonColor = Color(android.graphics.Color.parseColor("#FF4C64"))
                 } else {
                     // Иначе добавляем новую пару ключ-значение в словарь
                     numbersMap[keyTextFieldValue] = valueTextFieldValue
                     currentKey = keyTextFieldValue
-                    GlobalStack.values.push(numbersMap[currentKey]?.toDouble() ?: "".toDouble())
+                    GlobalStack.values.add(valueTextFieldValue.toDoubleOrNull() ?: 0.0)
                     println(GlobalStack.values)
                     buttonColor = Color.Green
                 }

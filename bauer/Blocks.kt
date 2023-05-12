@@ -18,10 +18,12 @@ import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.androidtaskcompose.ui.theme.GlobalStack
 import com.example.androidtaskcompose.ui.theme.opsExpression
 import com.example.scratch.printBlock
 import com.example.scratch.variableForView
 import kotlinx.coroutines.launch
+import java.util.Stack
 
 @Preview(showBackground = true)
 @Composable
@@ -160,12 +162,29 @@ fun navigationPanel() {
                     items = viewBlocks,
                     key = { index, item ->
                         item.hashCode()
-                    }) { index, item ->
+                    }
+                ) { index, item ->
                     val state = rememberDismissState(
                         confirmStateChange = {
                             if (it == DismissValue.DismissedToStart) {
+                                val itemHashCode = item.hashCode()
+                                val keyList = numbersMap.keys.toList()
+                                val keyToRemove = keyList[index]
+                                numbersMap.remove(keyToRemove)
+                                val tempStack = Stack<Double>()
+                                while (!GlobalStack.values.empty()) {
+                                    val value = GlobalStack.values.pop()
+                                    if (GlobalStack.values.size != index) {
+                                        tempStack.push(value)
+                                    }
+                                }
+                                while (!tempStack.empty()) {
+                                    GlobalStack.values.push(tempStack.pop())
+                                }
                                 viewBlocks.remove(item)
                             }
+                            println(GlobalStack.values)
+                            println(numbersMap)
                             true
                         }
                     )
