@@ -1,23 +1,26 @@
-package com.example.scratch
+package com.example.scratch.printBlock
 
+import Blocks
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import numbersMap
+import com.example.androidtaskcompose.ui.theme.GlobalStack
+import com.example.androidtaskcompose.ui.theme.ops
 
 var variableForView = ""
 
 @Composable
 fun printBlock(){
-    var variables by remember { mutableStateOf("") }
+    var variables by rememberSaveable { mutableStateOf("") }
     var buttonColor by remember {
         mutableStateOf(Color(android.graphics.Color.parseColor("#FF4C64")))
     }
@@ -27,7 +30,7 @@ fun printBlock(){
             TextField(
                 value = variables,
                 onValueChange = {newVariable ->
-                    if (newVariable.length <= 10){
+                    if (newVariable.length <= 100){
                         variables = newVariable
                     }
                 },
@@ -46,24 +49,20 @@ fun printBlock(){
                     var variablesArray = variables.split(",")
                     println(variablesArray)
                     for (values in variablesArray) {
-                        if (numbersMap.containsKey(values)) {
-                            variableForView += numbersMap.getValue(values).toString() + " "
-                        } else {
-                            colorFlag = false
-                            variableForView += ""
-                        }
+                            variableForView += ops(values).toString() + ", "
                     }
-                    println(variables)
+                println(GlobalStack.values)
                 if (!colorFlag){
                     buttonColor = Color.Red
                 }
                 else {
                     buttonColor = Color.Green
+                    colorFlag = true
                 }
             },
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = buttonColor
-            ),
+                    backgroundColor = buttonColor
+                    ),
             modifier = Modifier
                 .padding(top = 8.dp)
                 .fillMaxWidth()

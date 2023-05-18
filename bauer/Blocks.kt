@@ -1,9 +1,8 @@
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -14,16 +13,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.androidtaskcompose.ui.theme.GlobalStack
 import com.example.androidtaskcompose.ui.theme.opsExpression
-import com.example.scratch.printBlock
-import com.example.scratch.variableForView
+import com.example.scratch.printBlock.printBlock
 import kotlinx.coroutines.launch
 import java.util.Stack
+import androidx.compose.ui.input.pointer.pointerInput
+import com.example.scratch.createVariable.numbersMap
+import com.example.scratch.createVariable.textFieldWithMapValue
+import com.example.scratch.printBlock.variableForView
 
 @Preview(showBackground = true)
 @Composable
@@ -37,7 +38,7 @@ fun mainDisplay() {
     }
 }
 
-data class Blockes(
+data class Blocks(
     val blockID: Int,
     val color: String,
     val blockFunction: @Composable () -> Unit
@@ -48,7 +49,7 @@ data class Blockes(
 fun navigationPanel() {
     var iDOfBlock = 0
     var tempVariableForView = ""
-    val viewBlocks = remember { mutableStateListOf<Blockes>() }
+    val viewBlocks = remember { mutableStateListOf<Blocks>() }
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val isExpanded = remember { mutableStateOf(false) }
@@ -95,21 +96,21 @@ fun navigationPanel() {
             drawerHeader()
             drawerBody(
                 items = listOf(
-                    blocks(
+                    Block(
                         id = "createVariable",
                         title = "Create new variable",
                         contentDescription = "CreatingVariable",
                         icon = Icons.Default.AddCircle,
                         boxColor = "#FF7F50"
                     ),
-                    blocks(
+                    Block(
                         id = "mathOperation",
                         title = "Math operation",
                         contentDescription = "mathBlocks",
                         icon = Icons.Default.AddCircle,
                         boxColor = "#FF4C64"
                     ),
-                    blocks(
+                    Block(
                         id = "createPrint",
                         title = "Create print block",
                         contentDescription = "creatingPrint",
@@ -120,25 +121,25 @@ fun navigationPanel() {
                 onItemClick = {
                     if (it.id == "createVariable") {
                         viewBlocks.add(
-                            Blockes(
+                            Blocks(
                                 blockID = iDOfBlock++,
                                 color = "#FF7F50",
-                                blockFunction = { textFieldWithMapValue() }
+                                blockFunction = { textFieldWithMapValue()}
                             )
                         )
                     }
                     else if (it.id == "mathOperation"){
                         viewBlocks.add(
-                            Blockes(
+                            Blocks(
                                 blockID = iDOfBlock++,
                                 color = "#FF4C64",
-                                blockFunction = { opsExpression() }
+                                blockFunction = { opsExpression()}
                             )
                         )
                     }
                     else if (it.id == "createPrint"){
                         viewBlocks.add(
-                            Blockes(
+                            Blocks(
                                 blockID = iDOfBlock++,
                                 color = "#EC2EFF",
                                 blockFunction = { printBlock() }
@@ -157,7 +158,17 @@ fun navigationPanel() {
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
+            LazyColumn(modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectDragGesturesAfterLongPress(
+                        onDrag = { change, offset ->
+                            change.consume()
+
+                        }
+                    )
+                }
+            ) {
                 itemsIndexed(
                     items = viewBlocks,
                     key = { index, item ->
@@ -166,7 +177,7 @@ fun navigationPanel() {
                 ) { index, item ->
                     val state = rememberDismissState(
                         confirmStateChange = {
-                            if (it == DismissValue.DismissedToStart) {
+                            if (it == DismissValue.DismissedToStart && GlobalStack.values.isNotEmpty()) {
                                 val itemHashCode = item.hashCode()
                                 val keyList = numbersMap.keys.toList()
                                 val keyToRemove = keyList[index]
@@ -183,8 +194,9 @@ fun navigationPanel() {
                                 }
                                 viewBlocks.remove(item)
                             }
-                            println(GlobalStack.values)
-                            println(numbersMap)
+                            else{
+                                viewBlocks.remove(item)
+                            }
                             true
                         }
                     )

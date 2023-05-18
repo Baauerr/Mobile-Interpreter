@@ -3,12 +3,13 @@ package com.example.androidtaskcompose.ui.theme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import numbersMap
+import com.example.scratch.createVariable.numbersMap
 import java.util.*
 import java.util.Stack
 
@@ -20,14 +21,13 @@ object GlobalStack {
 
 @Composable
 fun opsExpression() {
-    var keyTextFieldValue by remember { mutableStateOf("") }
-    var valueTextFieldValue by remember { mutableStateOf("") }
+    var keyTextFieldValue by rememberSaveable { mutableStateOf("") }
+    var valueTextFieldValue by rememberSaveable { mutableStateOf("") }
     var savedKey by remember { mutableStateOf("") }
     var result by remember { mutableStateOf(0.0) }
     var buttonColor by remember {
         mutableStateOf(Color(android.graphics.Color.parseColor("#FF4C64")))
     }
-
     Column(modifier = Modifier.padding(16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             TextField(
@@ -39,12 +39,12 @@ fun opsExpression() {
                 },
                 modifier = Modifier.padding(top = 4.dp)
                     .weight(1f),
-                textStyle = TextStyle(color = androidx.compose.ui.graphics.Color.White),
+                textStyle = TextStyle(color = Color.White),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color(0xFF333333)
                 )
             )
-            Text(text = " = ", color = androidx.compose.ui.graphics.Color.White)
+            Text(text = " = ", color = Color.White)
             TextField(
                 value = valueTextFieldValue,
                 onValueChange = { newValue ->
@@ -53,13 +53,12 @@ fun opsExpression() {
                 modifier = Modifier.padding(top = 4.dp)
                     .weight(2f),
                 maxLines = 1,
-                textStyle = TextStyle(color = androidx.compose.ui.graphics.Color.White),
+                textStyle = TextStyle(color = Color.White),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color(0xFF444444)
                 )
             )
         }
-
         Button(
             onClick = {
                 if (valueTextFieldValue.isNotBlank()) {
@@ -85,10 +84,9 @@ fun opsExpression() {
         ) {
             Text("Result", color = androidx.compose.ui.graphics.Color.White)
         }
-
         Text(
             text = "$savedKey = $result",
-            color = androidx.compose.ui.graphics.Color.White
+            color = Color.White
         )
     }
 }
@@ -162,9 +160,10 @@ fun ops(expression: String): Double {
             }
         }
     }
-
+    println(GlobalStack.values)
 // Возвращаем результат вычисления
     return GlobalStack.values.pop()
+
 }
 
 fun getPrecedence(c: Char): Int {

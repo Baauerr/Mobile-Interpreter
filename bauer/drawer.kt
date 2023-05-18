@@ -37,10 +37,10 @@ fun drawerHeader() {
 
 @Composable
 fun drawerBody(
-    items: List<blocks>,
+    items: List<Block>,
     modifier: Modifier = Modifier,
     itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp, fontFamily = FontFamily.SansSerif),
-    onItemClick: (blocks) -> Unit
+    onItemClick: (Block) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -80,7 +80,7 @@ fun drawerBody(
     }
 }
 
-data class blocks(
+data class Block(
     val id: String,
     val title: String,
     val contentDescription: String,
