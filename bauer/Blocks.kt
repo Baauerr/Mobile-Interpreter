@@ -22,6 +22,7 @@ import com.example.scratch.printBlock.printBlock
 import kotlinx.coroutines.launch
 import java.util.Stack
 import androidx.compose.ui.input.pointer.pointerInput
+import com.example.scratch.conditions.conditions
 import com.example.scratch.createVariable.numbersMap
 import com.example.scratch.createVariable.textFieldWithMapValue
 import com.example.scratch.printBlock.variableForView
@@ -37,6 +38,8 @@ fun mainDisplay() {
         navigationPanel()
     }
 }
+
+var ready: MutableState<Boolean> = mutableStateOf(false)
 
 data class Blocks(
     val blockID: Int,
@@ -83,7 +86,9 @@ fun navigationPanel() {
                 BottomNavigationItem(
                     icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "Play") },
                     selected = true,
-                    onClick = {tempVariableForView = variableForView}
+                    onClick = {tempVariableForView = variableForView
+                        variableForView = ""
+                    }
                 )
                 BottomNavigationItem(
                     icon = { Icon(Icons.Filled.DateRange, contentDescription = "Console") },
@@ -117,6 +122,13 @@ fun navigationPanel() {
                         icon = Icons.Default.AddCircle,
                         boxColor = "#EC2EFF"
                     ),
+                    Block(
+                        id = "createConditions",
+                        title = "Create condition block",
+                        contentDescription = "creatingCondition",
+                        icon = Icons.Default.AddCircle,
+                        boxColor = "#60ff60"
+                    ),
                 ),
                 onItemClick = {
                     if (it.id == "createVariable") {
@@ -143,6 +155,15 @@ fun navigationPanel() {
                                 blockID = iDOfBlock++,
                                 color = "#EC2EFF",
                                 blockFunction = { printBlock() }
+                            )
+                        )
+                    }
+                    else if (it.id == "createConditions"){
+                        viewBlocks.add(
+                            Blocks(
+                                blockID = iDOfBlock++,
+                                color = "#60ff60",
+                                blockFunction = { conditions() }
                             )
                         )
                     }

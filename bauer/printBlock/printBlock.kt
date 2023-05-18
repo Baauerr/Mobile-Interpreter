@@ -47,11 +47,9 @@ fun printBlock(){
         Button(
             onClick = {
                     var variablesArray = variables.split(",")
-                    println(variablesArray)
                     for (values in variablesArray) {
-                            variableForView += ops(values).toString() + ", "
+                            variableForView += ops(values).toString() + " "
                     }
-                println(GlobalStack.values)
                 if (!colorFlag){
                     buttonColor = Color.Red
                 }

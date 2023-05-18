@@ -143,7 +143,12 @@ fun ops(expression: String): Double {
     for (token in outputQueue) {
         when {
             token.matches("[-+]?\\w+([.]?\\w+)?".toRegex()) -> {
-                GlobalStack.values.push(token.toDouble())
+                val variable = token.toDoubleOrNull()
+                if (variable == null) {
+                    val value = numbersMap[token] ?: throw IllegalArgumentException("Variable $token not found in the numbersMap dictionary")
+                } else {
+                    GlobalStack.values.push(variable)
+                }
             }
             else -> {
                 val b = GlobalStack.values.pop()
@@ -163,7 +168,6 @@ fun ops(expression: String): Double {
     println(GlobalStack.values)
 // Возвращаем результат вычисления
     return GlobalStack.values.pop()
-
 }
 
 fun getPrecedence(c: Char): Int {
