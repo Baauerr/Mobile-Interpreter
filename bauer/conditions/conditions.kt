@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.example.androidtaskcompose.ui.theme.ops
 import com.example.androidtaskcompose.ui.theme.stackTemp
 import com.example.scratch.createVariable.numbersMap
+import com.example.scratch.printBlock.variableForView
 
 @Composable
 fun conditions() {
@@ -21,6 +22,11 @@ fun conditions() {
     var secondValue by rememberSaveable { mutableStateOf("") }
     var mainAnswer by remember { mutableStateOf(false) }
     var selectedComparsion by remember { mutableStateOf(">") }
+    var variables by rememberSaveable { mutableStateOf("") }
+    var buttonColor by remember {
+        mutableStateOf(Color(android.graphics.Color.parseColor("#FF4C64")))
+    }
+    var colorFlag = true
     Column(modifier = Modifier.padding(16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             TextField(
@@ -33,7 +39,7 @@ fun conditions() {
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .weight(2f),
-                textStyle = TextStyle(color = androidx.compose.ui.graphics.Color.White),
+                textStyle = TextStyle(color = Color.White),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color(0xFF333333)
                 )
@@ -48,11 +54,26 @@ fun conditions() {
                     .padding(top = 4.dp)
                     .weight(2f),
                 maxLines = 1,
-                textStyle = TextStyle(color = androidx.compose.ui.graphics.Color.White),
+                textStyle = TextStyle(color = Color.White),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color(0xFF444444)
                 )
             )
+        }
+        Button(
+            onClick = {
+                firstValue = ops(firstValue).toString()
+                secondValue = ops(secondValue).toString()
+                buttonColor = Color.Green
+            },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = buttonColor
+            ),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth()
+        ) {
+            Text("Remember", color = Color.White)
         }
         mainAnswer = compareNumbers(firstValue, secondValue, selectedComparsion)
         Text(
@@ -105,8 +126,9 @@ fun dropdownMenu(): String {
 
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
+            onDismissRequest = { expanded = false },
+
+            ) {
             DropdownMenuItem(
                 onClick = {
                     selectedItem = "<"
@@ -155,7 +177,6 @@ fun dropdownMenu(): String {
             ) {
                 Text("<=")
             }
-            // Добавьте необходимое количество элементов меню
         }
     }
     return selectedItem
