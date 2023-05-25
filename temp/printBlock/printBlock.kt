@@ -13,11 +13,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.example.androidtaskcompose.ui.theme.ops
+import com.example.scratch.Blocks
 
 var variableForView = ""
 
 @Composable
-fun printBlock(){
+fun printBlock(viewBlocks: MutableList<Blocks>){
     var variables by rememberSaveable { mutableStateOf("") }
     var buttonColor by remember {
         mutableStateOf(Color(android.graphics.Color.parseColor("#FF4C64")))

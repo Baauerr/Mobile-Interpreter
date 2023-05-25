@@ -28,7 +28,7 @@ fun drawerHeader() {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "com.example.scratch.Blocks",
+            text = "Blocks",
             fontSize = 60.sp,
             color = Color.White,
         )

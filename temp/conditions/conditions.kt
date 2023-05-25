@@ -13,11 +13,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.example.androidtaskcompose.ui.theme.ops
 import com.example.androidtaskcompose.ui.theme.stackTemp
+import com.example.scratch.Blocks
 import com.example.scratch.createVariable.numbersMap
 import com.example.scratch.printBlock.variableForView
 
 @Composable
-fun conditions() {
+fun conditions(viewBlocks: MutableList<Blocks>) {
     var firstValue by rememberSaveable { mutableStateOf("") }
     var secondValue by rememberSaveable { mutableStateOf("") }
     var mainAnswer by remember { mutableStateOf(false) }

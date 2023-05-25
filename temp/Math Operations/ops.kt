@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import com.example.scratch.Blocks
 import com.example.scratch.createVariable.numbersMap
 import java.util.*
 import java.util.Stack
@@ -20,7 +21,7 @@ object GlobalStack {
 }
 
 @Composable
-fun opsExpression() {
+fun opsExpression(viewBlocks: MutableList<Blocks>) {
     var keyTextFieldValue by rememberSaveable { mutableStateOf("") }
     var valueTextFieldValue by rememberSaveable { mutableStateOf("") }
     var savedKey by remember { mutableStateOf("") }
