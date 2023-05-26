@@ -11,12 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.scratch.R
+import com.example.scratch.ui.theme.forHeaders
+import com.example.scratch.ui.theme.forNames
 
 
 @Composable
@@ -31,6 +30,7 @@ fun drawerHeader() {
             text = "Blocks",
             fontSize = 60.sp,
             color = Color.White,
+            fontFamily = forHeaders
         )
     }
 }
@@ -39,7 +39,7 @@ fun drawerHeader() {
 fun drawerBody(
     items: List<Block>,
     modifier: Modifier = Modifier,
-    itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp, fontFamily = FontFamily.SansSerif),
+    itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp, fontFamily = forNames),
     onItemClick: (Block) -> Unit
 ) {
     LazyColumn(
@@ -72,7 +72,8 @@ fun drawerBody(
                 Text(
                     modifier = Modifier.padding(start = 35.dp),
                     text = item.title,
-                    color = Color.White
+                    color = Color.White,
+                    fontFamily = forNames
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -94,7 +95,7 @@ fun AppBar(
 ) {
     TopAppBar(
         title = {
-            Text(text = stringResource(id = R.string.app_name))
+            Text(text = "Scratch 2.0", fontFamily = forHeaders)
         },
         backgroundColor = (Color(android.graphics.Color.parseColor("#0E1621"))),
         contentColor = (Color(android.graphics.Color.parseColor("#FFFFFF"))),

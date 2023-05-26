@@ -1,6 +1,5 @@
 package com.example.scratch.printBlock
 
-import Blocks
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,13 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import com.example.androidtaskcompose.ui.theme.GlobalStack
 import com.example.androidtaskcompose.ui.theme.ops
+import com.example.scratch.Blocks
 
 var variableForView = ""
 
 @Composable
-fun printBlock(){
+fun printBlock(viewBlocks: MutableList<Blocks>){
     var variables by rememberSaveable { mutableStateOf("") }
     var buttonColor by remember {
         mutableStateOf(Color(android.graphics.Color.parseColor("#FF4C64")))

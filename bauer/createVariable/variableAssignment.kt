@@ -1,9 +1,8 @@
 package com.example.scratch.createVariable
 
-import Blocks
 import androidx.compose.foundation.layout.*
+
 import androidx.compose.material.*
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -12,11 +11,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.example.androidtaskcompose.ui.theme.GlobalStack
+import com.example.scratch.Blocks
 
 
 val numbersMap = mutableStateMapOf("textFieldValue" to "")
 @Composable
-fun textFieldWithMapValue() {
+fun textFieldWithMapValue(viewBlocks: MutableList<Blocks>) {
     var keyTextFieldValue by rememberSaveable { mutableStateOf("") }
     var valueTextFieldValue by rememberSaveable { mutableStateOf("") }
     var savedKey by remember { mutableStateOf("") }
