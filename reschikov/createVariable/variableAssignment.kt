@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.core.text.isDigitsOnly
 import com.example.scratch.`Math Operations`.process
 import com.example.scratch.printBlock.printBlock
 
@@ -66,39 +67,5 @@ fun textFieldWithMapValue(viewBlocks: MutableList<Blocks>, blockID: Int) {
                 )
             )
         }
-
-//        Button(
-//            onClick = {
-//                if (numbersMap.containsKey(keyTextFieldValue)) {
-//                    // Если ключ уже есть в словаре, меняем значение
-//                    val oldValue = numbersMap[keyTextFieldValue]
-//                    numbersMap[keyTextFieldValue] = valueTextFieldValue
-//                    currentKey = keyTextFieldValue
-//                    if (oldValue != valueTextFieldValue) {
-//                        val index = GlobalStack.values.indexOfFirst { it == oldValue?.toDoubleOrNull() ?: "".toDouble() }
-//                        if (index != -1) {
-//                            GlobalStack.values[index] = valueTextFieldValue.toDoubleOrNull() ?: 0.0
-//                        }
-//                        println(GlobalStack.values)
-//                    }
-//                    buttonColor = Color(android.graphics.Color.parseColor("#FF4C64"))
-//                } else {
-//                    // Иначе добавляем новую пару ключ-значение в словарь
-//                    numbersMap[keyTextFieldValue] = valueTextFieldValue
-//                    currentKey = keyTextFieldValue
-//                    GlobalStack.values.add(valueTextFieldValue.toDoubleOrNull() ?: 0.0)
-//                    println(GlobalStack.values)
-//                    buttonColor = Color.Green
-//                }
-//            },
-//            colors = ButtonDefaults.buttonColors(
-//                backgroundColor = buttonColor
-//            ),
-//            modifier = Modifier
-//                .padding(top = 8.dp)
-//                .fillMaxWidth()
-//        ) {
-//            Text("Assignment", color = Color.White)
-//        }
     }
 }

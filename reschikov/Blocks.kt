@@ -29,7 +29,7 @@ import com.example.scratch.createVariable.numbersMap
 import com.example.scratch.createVariable.textFieldWithMapValue
 import com.example.scratch.printBlock.variableForView
 
-@Preview(showBackground = true)
+
 @Composable
 fun mainDisplay() {
     Box(
@@ -42,11 +42,12 @@ fun mainDisplay() {
 }
 
 var ready: MutableState<Boolean> = mutableStateOf(false)
+var flag = false
 
 data class Blocks(
-    val blockID: Int,
+    var blockID: Int,
     val color: String,
-    var expression: MutableState<String>,
+    val expression: MutableState<String>,
     val blockFunction: @Composable () -> Unit
 )
 
@@ -97,8 +98,15 @@ fun navigationPanel() {
                     icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "Play") },
                     selected = true,
                     onClick = {
-                        for(index in 0 until viewBlocks.size){
+                        numbersMap.clear()
+                        variableForView = ""
+                        for (index in 0 until viewBlocks.size) {
+                            flag = false
                             process(viewBlocks[index].expression.value)
+                            if (flag) {
+                                variableForView = "Error"
+                                break
+                            }
                         }
                     }
                 )
@@ -148,37 +156,34 @@ fun navigationPanel() {
                             Blocks(
                                 blockID = iDOfBlock,
                                 color = "#FF7F50",
-                                expression = mutableStateOf(" ") ,
-                                blockFunction = { textFieldWithMapValue(viewBlocks, iDOfBlock++)}
+                                expression = mutableStateOf(" "),
+                                blockFunction = { textFieldWithMapValue(viewBlocks, iDOfBlock++) }
                             )
                         )
-                    }
-                    else if (it.id == "mathOperation"){
+                    } else if (it.id == "mathOperation") {
                         viewBlocks.add(
                             Blocks(
                                 blockID = iDOfBlock,
                                 color = "#FF4C64",
-                                expression = mutableStateOf(" ") ,
-                                blockFunction = { opsExpression(viewBlocks, iDOfBlock++)}
+                                expression = mutableStateOf(" "),
+                                blockFunction = { opsExpression(viewBlocks, iDOfBlock++) }
                             )
                         )
-                    }
-                    else if (it.id == "createPrint"){
+                    } else if (it.id == "createPrint") {
                         viewBlocks.add(
                             Blocks(
                                 blockID = iDOfBlock,
                                 color = "#EC2EFF",
-                                expression = mutableStateOf(" ") ,
+                                expression = mutableStateOf(" "),
                                 blockFunction = { printBlock(viewBlocks, iDOfBlock++) }
                             )
                         )
-                    }
-                    else if (it.id == "createConditions"){
+                    } else if (it.id == "createConditions") {
                         viewBlocks.add(
                             Blocks(
                                 blockID = iDOfBlock++,
                                 color = "#60ff60",
-                                expression = mutableStateOf(" ") ,
+                                expression = mutableStateOf(" "),
                                 blockFunction = { conditions() }
                             )
                         )
@@ -229,8 +234,7 @@ fun navigationPanel() {
                                     GlobalStack.values.push(tempStack.pop())
                                 }
                                 viewBlocks.remove(item)
-                            }
-                            else{
+                            } else {
                                 viewBlocks.remove(item)
                             }
                             true
@@ -260,13 +264,14 @@ fun navigationPanel() {
                             }
                         },
                         dismissContent = {
-                            Box(modifier = Modifier
-                                .fillMaxWidth()
-                                .shadow(2.dp)
-                                .background(
-                                    color = (Color(android.graphics.Color.parseColor(item.color))),
-                                    shape = RoundedCornerShape(8.dp)
-                                )
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .shadow(2.dp)
+                                    .background(
+                                        color = (Color(android.graphics.Color.parseColor(item.color))),
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
                             ) {
                                 item.blockFunction()
                             }
@@ -278,10 +283,11 @@ fun navigationPanel() {
             }
         }
         if (isExpanded.value) {
-            Column(modifier = Modifier
-                .fillMaxSize()
-                .background(color = Color.Black.copy(alpha = 0.6f))
-                .padding(bottom = 55.dp),
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = Color.Black.copy(alpha = 0.6f))
+                    .padding(bottom = 55.dp),
                 Arrangement.Bottom,
             )
             {
@@ -301,7 +307,8 @@ fun navigationPanel() {
                     ) {
                     LazyRow()
                     {
-                        item{
+                        item {
+
                             Text(text = variableForView, fontSize = 30.sp)
                         }
                     }
@@ -310,3 +317,4 @@ fun navigationPanel() {
         }
     }
 }
+

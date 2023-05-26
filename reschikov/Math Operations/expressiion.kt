@@ -8,6 +8,7 @@ import com.example.androidtaskcompose.ui.theme.ops
 import com.example.androidtaskcompose.ui.theme.stackTemp
 import com.example.scratch.createVariable.numbersMap
 import com.example.scratch.printBlock.variableForView
+import flag
 
 
 fun process(statement: String) {
@@ -22,7 +23,9 @@ fun process(statement: String) {
             valueTextFieldValue = elements[2]
 
             numbersMap[keyTextFieldValue] = ops(valueTextFieldValue).toString()
-            println(numbersMap[keyTextFieldValue])
+            if (flag)
+                return
+            //println(numbersMap[keyTextFieldValue])
         }
         "p"->{
             variables = elements[1]

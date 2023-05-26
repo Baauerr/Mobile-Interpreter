@@ -60,6 +60,23 @@ fun conditions() {
                 )
             )
         }
+        Button(
+            onClick = {
+
+            },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = buttonColor
+            ),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth()
+        ) {
+            Text("Remember", color = Color.White)
+        }
+        Text(
+            text = "$mainAnswer",
+            color = Color.DarkGray
+        )
 //        Button(
 //            onClick = {
 //                firstValue = ops(firstValue).toString()

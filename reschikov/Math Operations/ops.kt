@@ -1,6 +1,7 @@
 package com.example.androidtaskcompose.ui.theme
 
 import Blocks
+import android.app.PendingIntent.getActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -11,6 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.example.scratch.createVariable.numbersMap
+import com.example.scratch.printBlock.variableForView
+import flag
 import java.util.*
 import java.util.Stack
 
@@ -95,6 +98,11 @@ fun ops(expression: String): Double {
                     outputQueue.add(current.toString())
                     i--
                 }
+                else {
+                    flag = true
+                    return(0.0)
+
+                }
             }
             in 'A'..'Z' -> {
                 // Если текущий символ - цифра или точка, то добавляем ее и все следующие символы числа в очередь выхода
@@ -104,8 +112,13 @@ fun ops(expression: String): Double {
                     i++
                 }
                 if (numbersMap.containsKey(number)) {
-                    outputQueue.add(numbersMap[number].toString())
+                    var current = numbersMap[number]
+                    outputQueue.add(current.toString())
                     i--
+                }
+                else {
+                    flag = true
+                    return(0.0)
                 }
             }
             '(' -> operators.push(c)
@@ -142,7 +155,7 @@ fun ops(expression: String): Double {
         when {
             token.matches("[-+]?\\w+([.]?\\w+)?".toRegex()) -> {
                 var variable = token.toDoubleOrNull()
-                    GlobalStack.values.push(variable)
+                GlobalStack.values.push(variable)
             }
             else -> {
                 val b = GlobalStack.values.pop()
@@ -163,6 +176,8 @@ fun ops(expression: String): Double {
 // Возвращаем результат вычисления
     return GlobalStack.values.pop()
 }
+
+
 
 fun getPrecedence(c: Char): Int {
     return when (c) {
