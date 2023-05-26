@@ -2,7 +2,6 @@ package com.example.scratch.printBlock
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -12,26 +11,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import com.example.androidtaskcompose.ui.theme.ops
-import com.example.scratch.Blocks
+import com.example.scratch.mainScreen.Blocks
+import com.example.scratch.mathOperations.process
 
 var variableForView = ""
 
 @Composable
-fun printBlock(viewBlocks: MutableList<Blocks>){
+fun printBlock(block: Blocks) {
     var variables by rememberSaveable { mutableStateOf("") }
-    var buttonColor by remember {
-        mutableStateOf(Color(android.graphics.Color.parseColor("#FF4C64")))
-    }
-    var colorFlag = true
-    Column(modifier = Modifier.padding(16.dp)){
-        Row(verticalAlignment = Alignment.CenterVertically){
+    Column(modifier = Modifier.padding(16.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (block.firstValue != "") {
+                variables = block.firstValue
+            }
             TextField(
                 value = variables,
-                onValueChange = {newVariable ->
-                    if (newVariable.length <= 100){
-                        variables = newVariable
-                    }
+                onValueChange = {
+                        variables = it
+                        block.firstValue = it
+                        block.expression.value = "p $variables"
+                        process(variables)
                 },
                 modifier = Modifier
                     .padding(top = 4.dp)
@@ -42,29 +41,6 @@ fun printBlock(viewBlocks: MutableList<Blocks>){
                     backgroundColor = Color(0xFF333333)
                 )
             )
-        }
-        Button(
-            onClick = {
-                    var variablesArray = variables.split(",")
-                    for (values in variablesArray) {
-                            variableForView += ops(values).toString() + " "
-                    }
-                if (!colorFlag){
-                    buttonColor = Color.Red
-                }
-                else {
-                    buttonColor = Color.Green
-                    colorFlag = true
-                }
-            },
-            colors = ButtonDefaults.buttonColors(
-                    backgroundColor = buttonColor
-                    ),
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .fillMaxWidth()
-        ) {
-            Text("Remember", color = Color.White)
         }
     }
 }

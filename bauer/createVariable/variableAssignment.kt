@@ -10,32 +10,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import com.example.androidtaskcompose.ui.theme.GlobalStack
-import com.example.scratch.Blocks
-
+import com.example.scratch.mainScreen.Blocks
 
 val numbersMap = mutableStateMapOf("textFieldValue" to "")
+
 @Composable
-fun textFieldWithMapValue(viewBlocks: MutableList<Blocks>) {
+fun textFieldWithMapValue(block: Blocks) {
     var keyTextFieldValue by rememberSaveable { mutableStateOf("") }
     var valueTextFieldValue by rememberSaveable { mutableStateOf("") }
-    var savedKey by remember { mutableStateOf("") }
-    var currentKey by remember { mutableStateOf("") }
-    var buttonColor by remember {
-        mutableStateOf(Color(android.graphics.Color.parseColor("#FF4C64")))
-    }
 
     Column(
         modifier = Modifier
             .padding(16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
+            if (block.firstValue != "") {
+                keyTextFieldValue = block.firstValue
+            }
+            if (block.secondValue != "") {
+                valueTextFieldValue = block.secondValue
+            }
             TextField(
                 value = keyTextFieldValue,
-                onValueChange = { newVariable ->
-                    if (newVariable.length <= 10) {
-                        keyTextFieldValue = newVariable
-                    }
+                onValueChange = {
+                    keyTextFieldValue = it
+                    block.firstValue = it
                 },
                 modifier = Modifier
                     .padding(top = 4.dp)
@@ -49,10 +48,9 @@ fun textFieldWithMapValue(viewBlocks: MutableList<Blocks>) {
             Text(text = " = ", color = Color.White)
             TextField(
                 value = valueTextFieldValue,
-                onValueChange = { newValue ->
-                    if (newValue.length <= 10) {
-                        valueTextFieldValue = newValue
-                    }
+                onValueChange = {
+                    valueTextFieldValue = it
+                    block.secondValue = it
                 },
                 modifier = Modifier
                     .padding(top = 4.dp)
@@ -63,39 +61,6 @@ fun textFieldWithMapValue(viewBlocks: MutableList<Blocks>) {
                     backgroundColor = Color(0xFF444444)
                 )
             )
-        }
-        Button(
-            onClick = {
-                if (numbersMap.containsKey(keyTextFieldValue)) {
-                    // Если ключ уже есть в словаре, меняем значение
-                    val oldValue = numbersMap[keyTextFieldValue]
-                    numbersMap[keyTextFieldValue] = valueTextFieldValue
-                    currentKey = keyTextFieldValue
-                    if (oldValue != valueTextFieldValue) {
-                        val index = GlobalStack.values.indexOfFirst { it == oldValue?.toDoubleOrNull() ?: "".toDouble() }
-                        if (index != -1) {
-                            GlobalStack.values[index] = valueTextFieldValue.toDoubleOrNull() ?: 0.0
-                        }
-                        println(GlobalStack.values)
-                    }
-                    buttonColor = Color(android.graphics.Color.parseColor("#FF4C64"))
-                } else {
-                    // Иначе добавляем новую пару ключ-значение в словарь
-                    numbersMap[keyTextFieldValue] = valueTextFieldValue
-                    currentKey = keyTextFieldValue
-                    GlobalStack.values.add(valueTextFieldValue.toDoubleOrNull() ?: 0.0)
-                    println(GlobalStack.values)
-                    buttonColor = Color.Green
-                }
-            },
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = buttonColor
-            ),
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .fillMaxWidth()
-        ) {
-            Text("Assignment", color = Color.White)
         }
     }
 }
