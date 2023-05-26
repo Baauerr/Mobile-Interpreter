@@ -1,7 +1,7 @@
 package com.example.scratch.createVariable
 
-import Blocks
 import androidx.compose.foundation.layout.*
+
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -10,33 +10,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.core.text.isDigitsOnly
-import com.example.scratch.`Math Operations`.process
-import com.example.scratch.printBlock.printBlock
-
+import com.example.scratch.mainScreen.Blocks
 
 val numbersMap = mutableStateMapOf("textFieldValue" to "")
+
 @Composable
-fun textFieldWithMapValue(viewBlocks: MutableList<Blocks>, blockID: Int) {
+fun textFieldWithMapValue(viewBlocks: MutableList<Blocks>,  block: Blocks) {
     var keyTextFieldValue by rememberSaveable { mutableStateOf("") }
     var valueTextFieldValue by rememberSaveable { mutableStateOf("") }
-    var savedKey by remember { mutableStateOf("") }
-    var currentKey by remember { mutableStateOf("") }
-    var buttonColor by remember {
-        mutableStateOf(Color(android.graphics.Color.parseColor("#FF4C64")))
-    }
 
     Column(
         modifier = Modifier
             .padding(16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
+            if (block.firstValue != "") {
+                keyTextFieldValue = block.firstValue
+            }
+            if (block.secondValue != "") {
+                valueTextFieldValue = block.secondValue
+            }
             TextField(
                 value = keyTextFieldValue,
-                onValueChange = { newVariable ->
-                    if (newVariable.length <= 10) {
-                        keyTextFieldValue = newVariable
-                    }
+                onValueChange = {
+                    keyTextFieldValue = it
+                    block.firstValue = it
                 },
                 modifier = Modifier
                     .padding(top = 4.dp)
@@ -50,12 +48,10 @@ fun textFieldWithMapValue(viewBlocks: MutableList<Blocks>, blockID: Int) {
             Text(text = " = ", color = Color.White)
             TextField(
                 value = valueTextFieldValue,
-                onValueChange = { newValue ->
-                    if (newValue.length <= 10) {
-                        valueTextFieldValue = newValue
-                        viewBlocks[blockID].expression.value = "= $keyTextFieldValue $valueTextFieldValue"
-
-                    }
+                onValueChange = {
+                    valueTextFieldValue = it
+                    block.secondValue = it
+                    block.expression.value = "=$keyTextFieldValue$valueTextFieldValue"
                 },
                 modifier = Modifier
                     .padding(top = 4.dp)

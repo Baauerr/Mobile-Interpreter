@@ -11,30 +11,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import com.example.androidtaskcompose.ui.theme.ops
-import com.example.androidtaskcompose.ui.theme.stackTemp
-import com.example.scratch.createVariable.numbersMap
-import com.example.scratch.printBlock.variableForView
+import com.example.scratch.mathOperations.ops
+import com.example.scratch.mainScreen.Blocks
 
 @Composable
-fun conditions() {
-    var firstValue by rememberSaveable { mutableStateOf("") }
-    var secondValue by rememberSaveable { mutableStateOf("") }
-    var mainAnswer by remember { mutableStateOf(false) }
-    var selectedComparsion by remember { mutableStateOf(">") }
-    var variables by rememberSaveable { mutableStateOf("") }
+fun conditions(block: Blocks) {
+    var firstKey by rememberSaveable { mutableStateOf("") }
+    var secondKey by rememberSaveable { mutableStateOf("") }
+    var mainAnswer by rememberSaveable { mutableStateOf(false) }
+    var selectedComparsion by rememberSaveable { mutableStateOf(">") }
     var buttonColor by remember {
         mutableStateOf(Color(android.graphics.Color.parseColor("#FF4C64")))
     }
-    var colorFlag = true
     Column(modifier = Modifier.padding(16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
+            if (block.firstValue != "") {
+                firstKey = block.firstValue
+            }
+            if (block.secondValue != "") {
+                secondKey = block.secondValue
+            }
             TextField(
-                value = firstValue,
-                onValueChange = { newVariable ->
-                    if (newVariable.length <= 100) {
-                        firstValue = newVariable
-                    }
+                value = firstKey,
+                onValueChange = {
+                    firstKey = it
+                    block.firstValue = it
+
                 },
                 modifier = Modifier
                     .padding(top = 4.dp)
@@ -46,9 +48,11 @@ fun conditions() {
             )
             selectedComparsion = dropdownMenu()
             TextField(
-                value = secondValue,
-                onValueChange = { newValue ->
-                    secondValue = newValue
+                value = secondKey,
+                onValueChange = {
+                    firstKey = it
+                    block.secondValue = it
+
                 },
                 modifier = Modifier
                     .padding(top = 4.dp)
@@ -62,7 +66,9 @@ fun conditions() {
         }
         Button(
             onClick = {
-
+                firstKey = ops(firstKey).toString()
+                secondKey = ops(secondKey).toString()
+                buttonColor = Color.Green
             },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = buttonColor
@@ -73,40 +79,21 @@ fun conditions() {
         ) {
             Text("Remember", color = Color.White)
         }
+        mainAnswer = compareNumbers(firstKey, secondKey, selectedComparsion)
         Text(
             text = "$mainAnswer",
             color = Color.DarkGray
         )
-//        Button(
-//            onClick = {
-//                firstValue = ops(firstValue).toString()
-//                secondValue = ops(secondValue).toString()
-//                buttonColor = Color.Green
-//            },
-//            colors = ButtonDefaults.buttonColors(
-//                backgroundColor = buttonColor
-//            ),
-//            modifier = Modifier
-//                .padding(top = 8.dp)
-//                .fillMaxWidth()
-//        ) {
-//            Text("Remember", color = Color.White)
-//        }
-//        mainAnswer = compareNumbers(firstValue, secondValue, selectedComparsion)
-//        Text(
-//            text = "$mainAnswer",
-//            color = Color.DarkGray
-//        )
     }
 }
 
 fun compareNumbers(
-    firstValue: String,
-    secondValue: String,
+    firstKey: String,
+    secondKey: String,
     selectedComparison: String
 ): Boolean {
-    val firstNumber = firstValue.toDoubleOrNull()
-    val secondNumber = secondValue.toDoubleOrNull()
+    val firstNumber = firstKey.toDoubleOrNull()
+    val secondNumber = secondKey.toDoubleOrNull()
 
     return when (selectedComparison) {
         "<" -> firstNumber != null && secondNumber != null && firstNumber < secondNumber
