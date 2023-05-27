@@ -1,2 +1,2 @@
 # MobileJIJA
-Заходим в branches, выбираем FinalJIJA,
+Заходим в branches, выбираем FinalJIJA
