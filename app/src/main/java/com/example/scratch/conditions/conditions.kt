@@ -18,12 +18,15 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.example.scratch.createVariable.textFieldWithMapValue
+import com.example.scratch.cycles.whileBlock
+import com.example.scratch.dimensions.textPadding
 import com.example.scratch.forDraggingElements.dragToReorder
 import com.example.scratch.mathOperations.ops
 import com.example.scratch.mainScreen.Blocks
 import com.example.scratch.mainScreen.itemHeight
 import com.example.scratch.mathOperations.opsExpression
 import com.example.scratch.printBlock.printBlock
+import com.example.scratch.ui.theme.forHeaders
 
 object GlobalDataIf {
     val blocksForConditions = mutableStateListOf<Blocks>()
@@ -92,6 +95,19 @@ fun ifBlock(block: Blocks) {
                 )
             )
         }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
+                .height(45.dp)
+                .background(
+                    color = (Color(android.graphics.Color.parseColor("#9B9B9B"))),
+                    shape = RoundedCornerShape(8.dp)
+                ),
+            contentAlignment = Alignment.CenterStart,
+        ) {
+            Text(text = "If", fontFamily = forHeaders, modifier = Modifier.padding(start = 10.dp))
+        }
         addConditionsMenu()
         Column(
             modifier = Modifier
@@ -119,7 +135,7 @@ fun ifBlock(block: Blocks) {
                                         backgroundColor = Color.Red,
                                     ),
                                     onClick = {
-                                        if (block.blockType == "createConditions") {
+                                        if (items.blockType == "createVariable") {
                                             GlobalDataIf.blocksForConditions.remove(items)
                                         }
                                     },
@@ -145,7 +161,7 @@ fun ifBlock(block: Blocks) {
                                         backgroundColor = Color.Red,
                                     ),
                                     onClick = {
-                                        if (block.blockType == "createConditions") {
+                                        if (items.blockType == "mathOperation") {
                                             GlobalDataIf.blocksForConditions.remove(items)
                                         }
                                     },
@@ -171,7 +187,33 @@ fun ifBlock(block: Blocks) {
                                         backgroundColor = Color.Red,
                                     ),
                                     onClick = {
-                                        if (block.blockType == "createConditions") {
+                                        if (items.blockType == "createPrint") {
+                                            GlobalDataIf.blocksForConditions.remove(items)
+                                        }
+                                    },
+                                ) {}
+                            }
+                        }
+                    "createWhile" ->
+                        Row() {
+                            Box(
+                                modifier = Modifier
+                                    .padding(10.dp)
+                                    .fillMaxWidth()
+                                    .background(
+                                        color = Color(android.graphics.Color.parseColor(items.color)),
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
+                            ) {
+                                whileBlock(items)
+                                Button(
+                                    modifier = Modifier
+                                        .fillMaxHeight(),
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = Color.Red,
+                                    ),
+                                    onClick = {
+                                        if (items.blockType == "createWhile") {
                                             GlobalDataIf.blocksForConditions.remove(items)
                                         }
                                     },
@@ -201,20 +243,23 @@ fun elseBlock(block: Blocks) {
             if (block.secondValue != "") {
                 secondElseKey = block.secondValue
             }
-            TextField(
-                value = "Else",
-                onValueChange = {
-
-                },
+            Box(
                 modifier = Modifier
-                    .padding(top = 4.dp)
-                    .weight(2f),
-                maxLines = 1,
-                textStyle = TextStyle(color = Color.White),
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color(0xFF444444)
+                    .height(45.dp)
+                    .fillMaxSize()
+                    .weight(2f)
+                    .background(
+                        color = (Color(android.graphics.Color.parseColor("#9B9B9B"))),
+                        shape = RoundedCornerShape(8.dp)
+                    ),
+                contentAlignment = Alignment.CenterStart,
+            ) {
+                Text(
+                    text = "Else",
+                    fontFamily = forHeaders,
+                    modifier = Modifier.padding(start = 10.dp)
                 )
-            )
+            }
         }
         addConditionsElseMenu()
         Column(
@@ -224,10 +269,111 @@ fun elseBlock(block: Blocks) {
         ) {
             for (items in GlobalDataElse.blocksForElseConditions) {
                 when (items.blockType) {
-                    "createVariable" -> textFieldWithMapValue(items)
-                    "mathOperation" -> opsExpression(items)
-                    "createPrint" -> printBlock(items)
-                    "createConditions" -> conditions(items)
+                    "createWhile" ->
+                        Row() {
+                            Box(
+                                modifier = Modifier
+                                    .padding(10.dp)
+                                    .fillMaxWidth()
+                                    .background(
+                                        color = Color(android.graphics.Color.parseColor(items.color)),
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
+                            ) {
+                                whileBlock(items)
+                                Button(
+                                    modifier = Modifier
+                                        .fillMaxHeight(),
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = Color.Red,
+                                    ),
+                                    onClick = {
+                                        if (items.blockType == "createWhile") {
+                                            GlobalDataElse.blocksForElseConditions.remove(items)
+                                        }
+                                    },
+                                ) {}
+                            }
+                        }
+                    "createVariable" ->
+                        Row() {
+                            Box(
+                                modifier = Modifier
+                                    .padding(10.dp)
+                                    .fillMaxWidth()
+                                    .background(
+                                        color = (Color(android.graphics.Color.parseColor(items.color))),
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
+                            )
+                            {
+                                textFieldWithMapValue(items)
+                                Button(
+                                    modifier = Modifier
+                                        .fillMaxHeight(),
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = Color.Red,
+                                    ),
+                                    onClick = {
+                                        if (items.blockType == "createVariable") {
+                                            GlobalDataElse.blocksForElseConditions.remove(items)
+                                        }
+                                    },
+                                ) {}
+                            }
+                        }
+                    "mathOperation" ->
+                        Row() {
+                            Box(
+                                modifier = Modifier
+                                    .padding(10.dp)
+                                    .fillMaxWidth()
+                                    .background(
+                                        color = Color(android.graphics.Color.parseColor(items.color)),
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
+                            ) {
+                                opsExpression(items)
+                                Button(
+                                    modifier = Modifier
+                                        .fillMaxHeight(),
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = Color.Red,
+                                    ),
+                                    onClick = {
+                                        if (items.blockType == "mathOperation") {
+                                            GlobalDataElse.blocksForElseConditions.remove(items)
+                                        }
+                                    },
+                                ) {}
+                            }
+                        }
+                    "createPrint" ->
+                        Row() {
+                            Box(
+                                modifier = Modifier
+                                    .padding(10.dp)
+                                    .fillMaxWidth()
+                                    .background(
+                                        color = Color(android.graphics.Color.parseColor(items.color)),
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
+                            ) {
+                                printBlock(items)
+                                Button(
+                                    modifier = Modifier
+                                        .fillMaxHeight(),
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = Color.Red,
+                                    ),
+                                    onClick = {
+                                        if (items.blockType == "createPrint") {
+                                            GlobalDataElse.blocksForElseConditions.remove(items)
+                                        }
+                                    },
+                                ) {}
+                            }
+                        }
                 }
             }
         }
@@ -392,10 +538,26 @@ fun addConditionsMenu() {
             ) {
                 Text("Print")
             }
-
+            DropdownMenuItem(
+                onClick = {
+                    GlobalDataIf.blocksForConditions.add(
+                        Blocks(
+                            firstValue = " ",
+                            secondValue = " ",
+                            blockID = conditionsIfBlockID++,
+                            color = "#0988DE",
+                            expression = mutableStateOf(" "),
+                            blockType = "createWhile"
+                        )
+                    )
+                }
+            ) {
+                Text("While")
+            }
         }
     }
 }
+
 @Composable
 fun addConditionsElseMenu() {
     var expanded by remember { mutableStateOf(false) }
@@ -470,6 +632,22 @@ fun addConditionsElseMenu() {
                 }
             ) {
                 Text("Print")
+            }
+            DropdownMenuItem(
+                onClick = {
+                    GlobalDataElse.blocksForElseConditions.add(
+                        Blocks(
+                            firstValue = " ",
+                            secondValue = " ",
+                            blockID = conditionsElseBlockID++,
+                            color = "#0988DE",
+                            expression = mutableStateOf(" "),
+                            blockType = "createWhile"
+                        )
+                    )
+                }
+            ) {
+                Text("While")
             }
 
         }

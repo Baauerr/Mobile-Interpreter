@@ -33,7 +33,10 @@ fun printBlock(block: Blocks) {
                 onValueChange = {
                         variables = it
                         block.firstValue = it
-                        block.expression.value = "p$variables"
+                        var temp = variables.replace("\\s".toRegex(), "")
+                    println(temp)
+                        block.expression.value = "p $temp"
+                    println(block.expression.value)
 //                        process(variables)
                 },
                 modifier = Modifier
@@ -48,5 +51,4 @@ fun printBlock(block: Blocks) {
         }
         Text (text = "Print",  modifier = Modifier.padding(top = textPadding, bottom = textPadding), fontFamily = forHeaders)
     }
-    println(block.expression)
 }

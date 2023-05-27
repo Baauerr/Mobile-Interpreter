@@ -3,6 +3,7 @@ package com.example.scratch.mathOperations
 import com.example.scratch.conditions.GlobalDataElse
 import com.example.scratch.conditions.GlobalDataIf
 import com.example.scratch.createVariable.numbersMap
+import com.example.scratch.cycles.GlobalDataWhile
 import com.example.scratch.mainScreen.Blocks
 import com.example.scratch.mainScreen.flag
 import com.example.scratch.printBlock.variableForView
@@ -29,7 +30,8 @@ fun process(statement: String, blocksForConditions: MutableList<Blocks>) {
 
             var variablesArray = variables.split(",")
             for (values in variablesArray) {
-                variableForView += ops(values).toString() + " "
+                variableForView += ops(values.filter { !it.isWhitespace()}).toString() + " "
+                println(variableForView)
             }
         }
         "?" ->{
@@ -44,6 +46,7 @@ fun process(statement: String, blocksForConditions: MutableList<Blocks>) {
                         break
                     }
                 }
+                GlobalDataIf.blocksForConditions.clear()
             }
             else{
                 for (index in 0 until GlobalDataElse.blocksForElseConditions.size) {
@@ -53,7 +56,24 @@ fun process(statement: String, blocksForConditions: MutableList<Blocks>) {
                         break
                     }
                 }
+                GlobalDataElse.blocksForElseConditions.clear()
             }
+        }
+        "w" ->{
+            val elements = statement.split(";")
+            variables = elements[1]
+            var check = ops(variables.replace("\\s".toRegex(), ""))
+            while(check == 1.0){
+                for (index in 0 until GlobalDataWhile.blocksForWhile.size) {
+                    process(GlobalDataWhile.blocksForWhile[index].expression.value, GlobalDataWhile.blocksForWhile)
+                    if (flag) {
+                        variableForView = "Error"
+                        break
+                    }
+                }
+                check = ops(variables.replace("\\s".toRegex(), ""))
+            }
+            GlobalDataWhile.blocksForWhile.clear()
         }
     }
 }

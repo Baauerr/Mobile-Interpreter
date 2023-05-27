@@ -14,11 +14,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.example.scratch.conditions.*
-import com.example.scratch.conditions.addConditionsMenu
 import com.example.scratch.createVariable.textFieldWithMapValue
 import com.example.scratch.mainScreen.Blocks
 import com.example.scratch.mathOperations.opsExpression
 import com.example.scratch.printBlock.printBlock
+import com.example.scratch.ui.theme.forHeaders
 
 object GlobalDataWhile {
     val blocksForWhile = mutableStateListOf<Blocks>()
@@ -76,7 +76,20 @@ fun whileBlock(block: Blocks) {
                 )
             )
         }
-        addConditionsMenu()
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
+                .height(45.dp)
+                .background(
+                    color = (Color(android.graphics.Color.parseColor("#9B9B9B"))),
+                    shape = RoundedCornerShape(8.dp)
+                ),
+            contentAlignment = Alignment.CenterStart,
+        ) {
+            Text(text = "While", fontFamily = forHeaders, modifier = Modifier.padding(start = 10.dp))
+        }
+        addWhileMenu()
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -103,7 +116,7 @@ fun whileBlock(block: Blocks) {
                                     backgroundColor = Color.Red,
                                 ),
                                 onClick = {
-                                    if (block.blockType == "createConditions") {
+                                    if (block.blockType == "createVariable") {
                                         GlobalDataWhile.blocksForWhile.remove(items)
                                     }
                                 },
@@ -128,7 +141,7 @@ fun whileBlock(block: Blocks) {
                                         backgroundColor = Color.Red,
                                     ),
                                     onClick = {
-                                        if (block.blockType == "createConditions") {
+                                        if (block.blockType == "mathOperation") {
                                             GlobalDataWhile.blocksForWhile.remove(items)
                                         }
                                     },
@@ -154,7 +167,7 @@ fun whileBlock(block: Blocks) {
                                     backgroundColor = Color.Red,
                                 ),
                                 onClick = {
-                                    if (block.blockType == "createConditions") {
+                                    if (block.blockType == "createPrint") {
                                         GlobalDataWhile.blocksForWhile.remove(items)
                                     }
                                 },
@@ -199,7 +212,7 @@ fun addWhileMenu() {
     var expanded by remember { mutableStateOf(false) }
     var selectedItem by remember { mutableStateOf("+") }
 
-    Column {
+    Column(modifier = Modifier.fillMaxSize()) {
         Button(
             onClick = { expanded = true },
             modifier = Modifier
@@ -268,6 +281,22 @@ fun addWhileMenu() {
                 }
             ) {
                 Text("Print")
+            }
+            DropdownMenuItem(
+                onClick = {
+                    GlobalDataWhile.blocksForWhile.add(
+                        Blocks(
+                            firstValue = " ",
+                            secondValue = " ",
+                            blockID = whileBlockID++,
+                            color = "#60ff60",
+                            expression = mutableStateOf(" "),
+                            blockType = "createConditions"
+                        )
+                    )
+                }
+            ) {
+                Text("IfElse")
             }
 
         }

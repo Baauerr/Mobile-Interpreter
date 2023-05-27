@@ -42,7 +42,7 @@ fun visualBlock(
     updateSlideState: (blockList: Blocks, slideState: SlideState) -> Unit,
     updateItemPosition: (currentIndex: Int, destinationIndex: Int) -> Unit
 ) {
-    val itemHeightDp = 100.dp
+    val itemHeightDp = 130.dp
     with(LocalDensity.current) {
         itemHeight = itemHeightDp.toPx().toInt()
         slotItemDifference = 16.dp.toPx()

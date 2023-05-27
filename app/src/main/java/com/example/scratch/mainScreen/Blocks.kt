@@ -133,7 +133,7 @@ fun MainScreen() {
                         title = "While",
                         contentDescription = "creatingWhile",
                         icon = Icons.Default.AddCircle,
-                        boxColor = "#60ff60"
+                        boxColor = "#0988DE"
                     ),
                 ),
                 onItemClick = {
@@ -186,7 +186,7 @@ fun MainScreen() {
                                     firstValue = " ",
                                     secondValue = " ",
                                     blockID = iDOfBlock++,
-                                    color = "#60ff60",
+                                    color = "#0988DE",
                                     expression = mutableStateOf(" "),
                                     blockType = "createWhile"
                                 )
@@ -197,7 +197,7 @@ fun MainScreen() {
         },
         contentColor = (Color(android.graphics.Color.parseColor("#FFFFFF"))),
         drawerBackgroundColor = (Color.Black.copy(alpha = 0.4f)),
-        backgroundColor = (Color(android.graphics.Color.parseColor("#17212B"))),
+        backgroundColor = Color.Transparent,
     ) { innerPadding ->
         Box(
             modifier = Modifier

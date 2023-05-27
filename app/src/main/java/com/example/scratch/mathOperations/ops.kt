@@ -10,8 +10,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.example.scratch.createVariable.numbersMap
+import com.example.scratch.dimensions.textPadding
 import com.example.scratch.mainScreen.Blocks
 import com.example.scratch.mainScreen.flag
+import com.example.scratch.ui.theme.forHeaders
 import java.util.*
 import java.util.Stack
 
@@ -67,6 +69,7 @@ fun opsExpression(block: Blocks) {
                 )
             )
         }
+        Text (text = "Math Operation",  modifier = Modifier.padding(top = textPadding, bottom = textPadding), fontFamily = forHeaders)
     }
 }
 fun ops(expression: String): Double {
