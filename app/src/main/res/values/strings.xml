@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Scratch</string>
+    <string name="padding">16.dp</string>
+</resources>
