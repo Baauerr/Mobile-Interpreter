@@ -97,30 +97,31 @@ fun whileBlock(block: Blocks) {
             for (items in  GlobalDataWhile.blocksForWhile) {
                 when (items.blockType) {
                     "createVariable" ->
-                        Row(
-                            modifier = Modifier
+                        Row()
+                        {
+                            Box(modifier = Modifier
                                 .padding(10.dp)
                                 .fillMaxWidth()
                                 .background(
-                                    color = (Color(android.graphics.Color.parseColor(items.color))),
+                                    color = Color(android.graphics.Color.parseColor(items.color)),
                                     shape = RoundedCornerShape(8.dp)
                                 )
-                        )
-                        {
-                            textFieldWithMapValue(items)
-                            Button(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxHeight(),
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = Color.Red,
-                                ),
-                                onClick = {
-                                    if (block.blockType == "createVariable") {
-                                        GlobalDataWhile.blocksForWhile.remove(items)
-                                    }
-                                },
-                            ) {}
+                            )
+                            {
+                                Button(
+                                    modifier = Modifier
+                                        .fillMaxHeight(),
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = Color.Red,
+                                    ),
+                                    onClick = {
+                                        if (items.blockType == "createVariable") {
+                                            GlobalDataWhile.blocksForWhile.remove(items)
+                                        }
+                                    },
+                                ) {}
+                                textFieldWithMapValue(items)
+                            }
                         }
                     "mathOperation" ->
                         Row() {
@@ -135,13 +136,12 @@ fun whileBlock(block: Blocks) {
                             ) {
                                 Button(
                                     modifier = Modifier
-//                                        .weight(1f)
                                         .fillMaxHeight(),
                                     colors = ButtonDefaults.buttonColors(
                                         backgroundColor = Color.Red,
                                     ),
                                     onClick = {
-                                        if (block.blockType == "mathOperation") {
+                                        if (items.blockType == "mathOperation") {
                                             GlobalDataWhile.blocksForWhile.remove(items)
                                         }
                                     },
@@ -150,55 +150,55 @@ fun whileBlock(block: Blocks) {
                             }
                         }
                     "createPrint" ->
-                        Row(
-                            modifier = Modifier
+                        Row() {
+                            Box(modifier = Modifier
                                 .padding(10.dp)
                                 .fillMaxWidth()
                                 .background(
                                     color = Color(android.graphics.Color.parseColor(items.color)),
                                     shape = RoundedCornerShape(8.dp)
                                 )
-                        ) {
-                            Button(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxHeight(),
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = Color.Red,
-                                ),
-                                onClick = {
-                                    if (block.blockType == "createPrint") {
-                                        GlobalDataWhile.blocksForWhile.remove(items)
-                                    }
-                                },
-                            ) {}
-                            printBlock(items)
+                            )
+                            {
+                                Button(
+                                    modifier = Modifier
+                                        .fillMaxHeight(),
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = Color.Red,
+                                    ),
+                                    onClick = {
+                                        if (items.blockType == "createPrint") {
+                                            GlobalDataWhile.blocksForWhile.remove(items)
+                                        }
+                                    },
+                                ) {}
+                                printBlock(items)
+                            }
                         }
                     "createConditions" ->
-                        Row(
-                            modifier = Modifier
-                                .padding(10.dp)
-                                .fillMaxWidth()
-                                .background(
-                                    color = (Color(android.graphics.Color.parseColor(items.color))),
-                                    shape = RoundedCornerShape(8.dp)
-                                )
-                        )
+                        Row()
                         {
-                            Button(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxHeight(),
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = Color.Red,
-                                ),
-                                onClick = {
-                                    if (block.blockType == "createConditions") {
-                                        GlobalDataWhile.blocksForWhile.remove(items)
-                                    }
-                                },
-                            ) {}
-                            conditions(items)
+                                Box(modifier = Modifier
+                                    .padding(10.dp)
+                                    .fillMaxWidth()
+                                    .background(
+                                        color = Color(android.graphics.Color.parseColor(items.color)),
+                                        shape = RoundedCornerShape(8.dp)
+                                    )){
+                                Button(
+                                    modifier = Modifier
+                                        .fillMaxHeight(),
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = Color.Red,
+                                    ),
+                                    onClick = {
+                                        if (items.blockType == "createConditions") {
+                                            GlobalDataWhile.blocksForWhile.remove(items)
+                                        }
+                                    },
+                                ) {}
+                                conditions(items)
+                            }
                         }
                 }
             }
