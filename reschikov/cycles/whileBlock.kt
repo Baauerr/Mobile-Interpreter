@@ -62,7 +62,7 @@ fun whileBlock(block: Blocks) {
                     onValueChange = {
                         secondKey = it
                         block.secondValue = it
-                        block.expression.value = "?;$firstKey$selectedComparsion$secondKey"
+                        block.expression.value = "w;$firstKey$selectedComparsion$secondKey"
                         println(block.expression.value)
 
                     },
@@ -76,7 +76,7 @@ fun whileBlock(block: Blocks) {
                     )
                 )
             }
-            addConditionsMenu()
+            addWhileMenu()
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -269,7 +269,22 @@ fun addWhileMenu() {
             ) {
                 Text("Print")
             }
-
+            DropdownMenuItem(
+                onClick = {
+                    GlobalDataWhile.blocksForWhile.add(
+                        Blocks(
+                            firstValue = " ",
+                            secondValue = " ",
+                            blockID = whileBlockID++,
+                            color = "#FF7F50",
+                            expression = mutableStateOf(" "),
+                            blockType = "createConditions"
+                        )
+                    )
+                }
+            ) {
+                Text("If-Else")
+            }
         }
     }
 }

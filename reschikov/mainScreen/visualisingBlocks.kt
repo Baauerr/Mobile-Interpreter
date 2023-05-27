@@ -23,6 +23,7 @@ import com.example.scratch.conditions.conditions
 import com.example.scratch.mathOperations.opsExpression
 //import com.example.scratch.conditions.conditions
 import com.example.scratch.createVariable.textFieldWithMapValue
+import com.example.scratch.cycles.GlobalDataWhile
 import com.example.scratch.cycles.whileBlock
 import com.example.scratch.forDraggingElements.SlideState
 import com.example.scratch.forDraggingElements.dragToReorder
@@ -116,6 +117,9 @@ fun visualBlock(
                     if(block.blockType == "createConditions"){
                         GlobalDataIf.blocksForConditions.clear()
                         GlobalDataElse.blocksForElseConditions.clear()
+                    }
+                    if(block.blockType == "createWhile"){
+                        GlobalDataWhile.blocksForWhile.clear()
                     }
                 },
             ) {
