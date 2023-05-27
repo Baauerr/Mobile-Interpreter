@@ -43,5 +43,4 @@ fun printBlock(block: Blocks) {
             )
         }
     }
-    println(block.expression)
 }

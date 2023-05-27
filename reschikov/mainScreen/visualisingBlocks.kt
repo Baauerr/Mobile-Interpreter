@@ -17,9 +17,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.example.scratch.mathOperations.opsExpression
+import com.example.scratch.conditions.GlobalDataElse
+import com.example.scratch.conditions.GlobalDataIf
 import com.example.scratch.conditions.conditions
+import com.example.scratch.mathOperations.opsExpression
+//import com.example.scratch.conditions.conditions
 import com.example.scratch.createVariable.textFieldWithMapValue
+import com.example.scratch.cycles.whileBlock
 import com.example.scratch.forDraggingElements.SlideState
 import com.example.scratch.forDraggingElements.dragToReorder
 import com.example.scratch.printBlock.printBlock
@@ -84,7 +88,6 @@ fun visualBlock(
             .offset { IntOffset(0, verticalTranslation) }
             .zIndex(zIndex)
             .fillMaxWidth()
-            .height(100.dp)
             .background(
                 color = (Color(android.graphics.Color.parseColor(block.color))),
                 shape = RoundedCornerShape(8.dp)
@@ -94,21 +97,26 @@ fun visualBlock(
             Box(modifier = Modifier.weight(10f))
             {
                 when (block.blockType) {
-                    "createVariable" -> textFieldWithMapValue(viewBlocks, block)
-                    "mathOperation" -> opsExpression(viewBlocks, block)
+                    "createVariable" -> textFieldWithMapValue(block)
+                    "mathOperation" -> opsExpression(block)
                     "createPrint" -> printBlock(block)
                     "createConditions" -> conditions(block)
+                    "createWhile" -> whileBlock(block)
                 }
             }
             Button(
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f),
+                    .weight(1f)
+                    .fillMaxHeight(),
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color.Red,
                 ),
                 onClick = {
                     viewBlocks.remove(block)
+                    if(block.blockType == "createConditions"){
+                        GlobalDataIf.blocksForConditions.clear()
+                        GlobalDataElse.blocksForElseConditions.clear()
+                    }
                 },
             ) {
                 Icon(

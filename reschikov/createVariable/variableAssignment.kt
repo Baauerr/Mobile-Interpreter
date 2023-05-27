@@ -11,11 +11,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.example.scratch.mainScreen.Blocks
+import com.example.scratch.mathOperations.ops
 
 val numbersMap = mutableStateMapOf("textFieldValue" to "")
 
 @Composable
-fun textFieldWithMapValue(viewBlocks: MutableList<Blocks>,  block: Blocks) {
+fun textFieldWithMapValue(block: Blocks) {
+    var randomMassiveSecond = remember { mutableStateListOf<Blocks >() }
     var keyTextFieldValue by rememberSaveable { mutableStateOf("") }
     var valueTextFieldValue by rememberSaveable { mutableStateOf("") }
 

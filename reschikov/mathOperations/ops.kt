@@ -20,7 +20,8 @@ object GlobalStack {
 }
 
 @Composable
-fun opsExpression(viewBlocks: MutableList<Blocks>,block: Blocks) {
+fun opsExpression(block: Blocks) {
+    var randomMassiveFirst = remember { mutableStateListOf<Blocks >() }
     var keyTextFieldValue = rememberSaveable { mutableStateOf("") }
     var valueTextFieldValue = rememberSaveable { mutableStateOf("") }
     var savedKey by remember { mutableStateOf("") }
@@ -49,7 +50,6 @@ fun opsExpression(viewBlocks: MutableList<Blocks>,block: Blocks) {
                     backgroundColor = Color(0xFF333333)
                 )
             )
-            println(block.expression)
             Text(text = " = ", color = Color.White)
             TextField(
                 value = valueTextFieldValue.value,
@@ -72,7 +72,6 @@ fun opsExpression(viewBlocks: MutableList<Blocks>,block: Blocks) {
 fun ops(expression: String): Double {
     val operators = Stack<Char>()
     val outputQueue = LinkedList<String>()
-
     val comparators = mapOf<String, (Double, Double) -> Boolean>(
         ">" to { a, b -> a > b },
         "<" to { a, b -> a < b },
@@ -87,6 +86,9 @@ fun ops(expression: String): Double {
     while (i < expression.length) {
         val c = expression[i].toChar()
         when (c) {
+            in " "->{
+                i++
+            }
             in '0'..'9', '.' -> {
                 var number = ""
                 while (i < expression.length && (expression[i] in '0'..'9' || expression[i] == '.')) {
@@ -141,7 +143,7 @@ fun ops(expression: String): Double {
 
     for (token in outputQueue) {
         when {
-            token.matches("[-+]?\\w+([.]?\\w+)?".toRegex()) -> {
+            token.matches("\\s*[-+]?\\s*\\w+\\s*([.]?\\s*\\w+\\s*)?\\s*".toRegex()) -> {
                 val variable = token.toDoubleOrNull()
                 GlobalStack.values.push(variable)
             }

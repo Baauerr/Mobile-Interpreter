@@ -31,6 +31,7 @@ var flag = false
 @ExperimentalAnimationApi
 @Composable
 fun MainScreen() {
+    val empty = remember { mutableStateListOf<Blocks>() }
     val viewBlocks = remember { mutableStateListOf<Blocks>() }
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
@@ -80,8 +81,7 @@ fun MainScreen() {
                         variableForView = ""
                         for (index in 0 until viewBlocks.size) {
                             flag = false
-                            println(index)
-                            process(viewBlocks[index].expression.value)
+                            process(viewBlocks[index].expression.value,empty)
                             if (flag) {
                                 variableForView = "Error"
                                 break
@@ -128,6 +128,13 @@ fun MainScreen() {
                         icon = Icons.Default.AddCircle,
                         boxColor = "#60ff60"
                     ),
+                    Block(
+                        id = "createWhile",
+                        title = "While",
+                        contentDescription = "creatingWhile",
+                        icon = Icons.Default.AddCircle,
+                        boxColor = "#60ff60"
+                    ),
                 ),
                 onItemClick = {
                     when (it.id) {
@@ -171,6 +178,17 @@ fun MainScreen() {
                                     color = "#60ff60",
                                     expression = mutableStateOf(" "),
                                     blockType = "createConditions"
+                                )
+                            )
+                        "createWhile" ->
+                            viewBlocks.add(
+                                Blocks(
+                                    firstValue = " ",
+                                    secondValue = " ",
+                                    blockID = iDOfBlock++,
+                                    color = "#60ff60",
+                                    expression = mutableStateOf(" "),
+                                    blockType = "createWhile"
                                 )
                             )
                     }
