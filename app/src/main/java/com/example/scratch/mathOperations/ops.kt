@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.example.scratch.createVariable.numbersMap
+import com.example.scratch.dimensions.columnPadding
 import com.example.scratch.dimensions.textPadding
 import com.example.scratch.mainScreen.Blocks
 import com.example.scratch.mainScreen.flag
@@ -31,7 +32,7 @@ fun opsExpression(block: Blocks) {
     var buttonColor by remember {
         mutableStateOf(Color(android.graphics.Color.parseColor("#FF4C64")))
     }
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(modifier = Modifier.padding(top = columnPadding/2, start = columnPadding, end = columnPadding)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (block.firstValue != "") {
                 keyTextFieldValue.value = block.firstValue
